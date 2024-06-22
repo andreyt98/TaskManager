@@ -1,11 +1,11 @@
 import { useRef } from "react";
 import { useState, useEffect } from "react";
+import { EditModal } from "./EditModal";
+
 const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
-  const [editableValue, setEditableValue] = useState(task.description);
+  const [editableValue, setEditableValue] = useState({ description: "", category: "none" });
   const [newArray, setNewArray] = useState([]);
-
-  const editableTaskRef = useRef();
 
   const deleteTask = (event) => {
     let newA;
@@ -45,57 +45,19 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   function showEditableInput() {
     setEditClicked(true);
     setShowEditable(!showEditable);
-    setEditableValue(task.description);
-
-    setTimeout(() => {
-      editableTaskRef.current.focus();
-    }, 0);
-
-    edit();
   }
 
-  function edit() {
-    if (showEditable) {
-      newArray.forEach((el) => {
-        if (el.id == task.id && editableValue !== "") {
-          el.description = editableValue;
 
-          localStorage.clear();
-          localStorage.setItem("tasks", JSON.stringify(newArray));
-        }
-      });
-      setTasks(newArray);
-    }
-  }
-
-  function handleEnterKey(e) {
-    if (e.key === "Enter") {
-      setShowEditable(!showEditable);
-      edit();
-    }
-  }
   return (
     <div className={"task rounded-sm p-3 border border-gray-800 flex items-center justify-space-between " + (task.completed ? "completed border-success" : "")}>
       {/* task text */}
       <div className={"w-auto " + (task.completed ? "line-through text-gray-600" : "")}>{task.description}</div>
-      {task.category != "none" && <span class="bg-sky-200 text-gray-900 text-xs font-medium me-2 px-2.5 py-0.5  border-blue-400 rounded-xl">{task.category}</span>}
-      {/* input to edit (will appear on edit button click) */}
-      <input
-        value={editableValue}
-        onChange={(e) => {
-          setEditableValue(e.target.value);
-        }}
-        type="text"
-        name=""
-        id="new"
-        style={{ display: showEditable ? "block" : "none", backgroundColor: "#073056", color: "white", border: "none" }}
-        ref={editableTaskRef}
-        placeholder="editing task..."
-        onKeyUp={(e) => {
-          handleEnterKey(e);
-        }}
-      />
+      {task.category != "none" && <span className="bg-sky-200 text-gray-900 text-xs font-medium me-2 px-2.5 py-0.5  border-blue-400 rounded-xl">{task.category}</span>}
 
+      {/* modal to edit (will appear on edit button click) */}
+      {showEditable &&
+        <EditModal editableValue={editableValue} setEditableValue={setEditableValue} task={task} setTasks={setTasks} newArray={newArray} setNewArray={setNewArray} setShowEditable={setShowEditable}/>
+      }
       {/* task options */}
       <div className="w-auto ms-auto ">
         <button role={"button"} onClick={showEditableInput}>
