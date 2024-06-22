@@ -5,6 +5,35 @@ import { categories } from "../helpers/taskConfig";
 export const TaskForm = ({ tasks, setTasks }) => {
   const [inputValues, setInputValues] = useState({ description: "", category: "none" });
 
+  useEffect(() => {
+    localStorage.setItem("tasks", JSON.stringify(tasks));
+  }, [tasks]);
+  const submitTask = (e) => {
+    e.preventDefault();
+
+    if (!inputValues.description) {
+      e.target.style.border = "3px solid red";
+      e.target.style.border = "3px solid red";
+
+      setTimeout(() => {
+        e.target.style.border = "none";
+      }, 2000);
+
+      return;
+    }
+
+    const newTodo = {
+      id: Math.random().toString(36).substring(2) + Date.now().toString(36),
+      state: "new",
+      description: inputValues.description,
+      category: inputValues.category,
+    };
+
+    setTasks([...tasks, newTodo]);
+
+    setInputValues({ description: "", category: "none" });
+  };
+
   return (
     <form className="max-w-lg mx-auto" onSubmit={submitTask}>
       <div className="flex relative w-full">
