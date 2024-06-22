@@ -7,6 +7,73 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
 
   const editableTaskRef = useRef();
 
+  const deleteTask = (event) => {
+    let newA;
+    tasks.forEach((e) => {
+      if (e.id == task.id) {
+        newA = tasks.filter((el) => el.id != task.id);
+
+        localStorage.clear();
+        localStorage.setItem("tasks", JSON.stringify(newA));
+
+        const index = tasks.indexOf(e);
+        tasks.splice(index, 1);
+
+        event.target.parentElement.parentElement.style.transform = "scale(0.1)";
+        setTimeout(() => {
+          setTasks(newA);
+        }, 200);
+      }
+    });
+  };
+
+  const checkTask = () => {
+    const completedTodo = [...tasks];
+    completedTodo.find((el) => {
+      if (el.id === task.id) {
+        el.completed = !el.completed;
+      }
+    });
+
+    setTasks(completedTodo);
+  };
+
+  useEffect(() => {
+    setNewArray([...tasks]);
+  }, [tasks]);
+
+  function showEditableInput() {
+    setEditClicked(true);
+    setShowEditable(!showEditable);
+    setEditableValue(task.description);
+
+    setTimeout(() => {
+      editableTaskRef.current.focus();
+    }, 0);
+
+    edit();
+  }
+
+  function edit() {
+    if (showEditable) {
+      newArray.forEach((el) => {
+        if (el.id == task.id && editableValue !== "") {
+          el.description = editableValue;
+
+          localStorage.clear();
+          localStorage.setItem("tasks", JSON.stringify(newArray));
+        }
+      });
+      setTasks(newArray);
+    }
+  }
+
+  function handleEnterKey(e) {
+    if (e.key === "Enter") {
+      setShowEditable(!showEditable);
+      edit();
+    }
+  }
   return (
     <div className={"task rounded-sm p-3 border border-gray-800 flex items-center justify-space-between " + (task.completed ? "completed border-success" : "")}>
       {/* task text */}
