@@ -4,13 +4,14 @@ import { categories } from "../helpers/taskConfig";
 export function EditModal({ editableValue, setEditableValue, task, setTasks, newArray, setShowEditable }) {
   function edit(e) {
     e.preventDefault();
-    if (editableValue.description == "") {
+    if (editableValue.title == "" || editableValue.description == "") {
       return;
     }
 
     if (newArray && newArray.length > 0) {
       newArray.forEach((el) => {
         if (el.id == task.id) {
+          el.title = editableValue.title;
           el.description = editableValue.description;
           el.category = editableValue.category;
 
@@ -53,6 +54,22 @@ export function EditModal({ editableValue, setEditableValue, task, setTasks, new
           >
             <div className="grid gap-4 mb-4 grid-cols-2">
               <div className="col-span-2">
+                <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 ">
+                  Title
+                </label>
+                <input
+                  onChange={(e) => {
+                    setEditableValue({ ...editableValue, title: e.target.value });
+                  }}
+                  defaultValue={task.title}
+                  id="title"
+                  rows="4"
+                  className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
+                  placeholder="Task title..."
+                ></input>
+              </div>
+
+              <div className="col-span-2">
                 <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 ">
                   Description
                 </label>
@@ -64,7 +81,7 @@ export function EditModal({ editableValue, setEditableValue, task, setTasks, new
                   id="description"
                   rows="4"
                   className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
-                  placeholder="Write product description here"
+                  placeholder="Task description..."
                 ></textarea>
               </div>
 

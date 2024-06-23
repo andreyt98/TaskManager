@@ -4,7 +4,7 @@ import { EditModal } from "./EditModal";
 
 const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
-  const [editableValue, setEditableValue] = useState({ description: "", category: "none" });
+  const [editableValue, setEditableValue] = useState({ title: "", description: "", category: "none" });
   const [newArray, setNewArray] = useState([]);
 
   const deleteTask = (event) => {
