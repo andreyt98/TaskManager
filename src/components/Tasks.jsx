@@ -8,34 +8,24 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [newArray, setNewArray] = useState([]);
 
   const deleteTask = (event) => {
-    let newA;
-    tasks.forEach((e) => {
-      if (e.id == task.id) {
-        newA = tasks.filter((el) => el.id != task.id);
+    let temp;
 
+    tasks[0].forEach((sectionTask) => {
+      console.log(sectionTask);
+      if (sectionTask.id == task.id) {
+        console.log(sectionTask.id);
+        temp = tasks[0].filter((el) => el.id != sectionTask.id);
+
+        const updatedArray = [temp, [...tasks[1]], [...tasks[2]]];
         localStorage.clear();
-        localStorage.setItem("tasks", JSON.stringify(newA));
+        localStorage.setItem("tasks", JSON.stringify(updatedArray));
 
-        const index = tasks.indexOf(e);
+        const index = tasks.indexOf(sectionTask);
         tasks.splice(index, 1);
 
-        event.target.parentElement.parentElement.style.transform = "scale(0.1)";
-        setTimeout(() => {
-          setTasks(newA);
-        }, 200);
+        setTasks(updatedArray);
       }
     });
-  };
-
-  const checkTask = () => {
-    const completedTodo = [...tasks];
-    completedTodo.find((el) => {
-      if (el.id === task.id) {
-        el.completed = !el.completed;
-      }
-    });
-
-    setTasks(completedTodo);
   };
 
   useEffect(() => {
@@ -50,7 +40,7 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   return (
     <div className={"task  border border-gray-300 flex flex-col items-center justify-space-between bg-gray-100 rounded-md text-black"}>
       {/* title and dropdown */}
-      <div className="flex w-full justify-between border-b border-b-slate-300 p-2">
+      <div className="flex w-full justify-between border-b border-b-slate-300 p-2 transition-all duration-200">
         <p className="font-semibold">{task.title}</p>
 
         <div className="dropdown text-right relative text-sm">
