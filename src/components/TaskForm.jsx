@@ -3,8 +3,7 @@ import { useState, useEffect } from "react";
 import { categories } from "../helpers/taskConfig";
 
 export const TaskForm = ({ tasks, setTasks }) => {
-  const [inputValues, setInputValues] = useState({ description: "", category: "none" });
-
+  const [inputValues, setInputValues] = useState({ title:"", description: "", category: "none" });
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -21,16 +20,21 @@ export const TaskForm = ({ tasks, setTasks }) => {
       return;
     }
 
-    const newTodo = {
+    const newTaskObj = {
       id: Math.random().toString(36).substring(2) + Date.now().toString(36),
       state: "new",
+      title: inputValues.title,
       description: inputValues.description,
       category: inputValues.category,
     };
 
-    setTasks([...tasks, newTodo]);
+    const newTaskArray = [newTaskObj];
+    const inProgressTaskArray = [];
+    const completedTaskArray = [];
 
-    setInputValues({ description: "", category: "none" });
+    setTasks([...tasks, newTaskArray, inProgressTaskArray, completedTaskArray]);
+
+    setInputValues({ title: "", description: "", category: "none" });
   };
 
   return (
