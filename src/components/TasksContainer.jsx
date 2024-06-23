@@ -4,6 +4,7 @@ import Tasks from "./Tasks";
 export function TasksContainer({ tasks, setTasks, setEditClicked }) {
   return (
     <>
+    {/* TODO: create single component to render droppable elements to be able to render any array  */}
       <Droppable droppableId="tasksSections">
         {(provided) => {
           return (
@@ -11,8 +12,7 @@ export function TasksContainer({ tasks, setTasks, setEditClicked }) {
               <p className="bg-gray-100 text-orange-700 text-xs inline-flex items-center px-2.5 py-0.5 rounded-md font-semibold border-l-8 border-l-orange-600">New tasks</p>
               {tasks &&
                 tasks.length > 0 &&
-                tasks[0].length > 0 &&
-                tasks[0].map((task, index) => {
+                tasks.map((task, index) => {
                   return (
                     <Draggable key={task.id} draggableId={task.id.toString()} index={index}>
                       {(provided) => {

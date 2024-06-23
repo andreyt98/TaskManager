@@ -5,21 +5,11 @@ import { categories } from "../helpers/taskConfig";
 export const TaskForm = ({ tasks, setTasks }) => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   useEffect(() => {
-    localStorage.setItem("tasks", JSON.stringify(tasks));
+    localStorage.setItem("newTasks", JSON.stringify(tasks));
   }, [tasks]);
   const submitTask = (e) => {
     e.preventDefault();
-
-    if (!inputValues.description) {
-      e.target.style.border = "3px solid red";
-
-      setTimeout(() => {
-        e.target.style.border = "none";
-      }, 2000);
-
-      return;
-    }
-
+    
     const newTaskObj = {
       id: Math.random().toString(36).substring(2) + Date.now().toString(36),
       state: "new",
@@ -30,16 +20,13 @@ export const TaskForm = ({ tasks, setTasks }) => {
 
     let newTaskArray;
     if (tasks.length < 1) {
-      const inProgressTaskArray = [];
-      const completedTaskArray = [];
-      newTaskArray = [[newTaskObj], inProgressTaskArray, completedTaskArray];
+      newTaskArray = [newTaskObj];
     } else {
-      newTaskArray = [...tasks];
-      newTaskArray[0].push(newTaskObj);
+      newTaskArray = [...tasks,newTaskObj];
     }
     setTasks(newTaskArray);
     localStorage.clear();
-    localStorage.setItem("tasks", JSON.stringify(newTaskArray));
+    localStorage.setItem("newTasks", JSON.stringify(newTaskArray));
 
     setInputValues({ title: "", description: "", category: "none" });
   };
