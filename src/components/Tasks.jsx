@@ -49,7 +49,7 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
               <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M6 12h.01m6 0h.01m5.99 0h.01" />
             </svg>
           </button>
-          <div class="dropdown-menu absolute -left-8 top-6  bg-gray-50 border border-slate-300 rounded-md text-black flex flex-col justify-start gap-2 overflow-hidden">
+          <div className="dropdown-menu absolute -left-8 top-6  bg-gray-50 border border-slate-300 rounded-md text-black flex flex-col justify-start gap-2 overflow-hidden">
             <button onClick={showEditableInput}>
               <p className=" cursor-pointer hover:bg-gray-100 px-3 py-2">Edit</p>
             </button>
