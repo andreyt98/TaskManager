@@ -51,7 +51,7 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
     <div className={"task  border border-gray-300 flex flex-col items-center justify-space-between bg-gray-100 rounded-md text-black"}>
       {/* title and dropdown */}
       <div className="flex w-full justify-between border-b border-b-slate-300 p-2">
-        <p className="font-semibold">Title</p>
+        <p className="font-semibold">{task.title}</p>
 
         <div className="dropdown text-right relative text-sm">
           <button>
@@ -89,7 +89,7 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
         <EditModal editableValue={editableValue} setEditableValue={setEditableValue} task={task} setTasks={setTasks} newArray={newArray} setNewArray={setNewArray} setShowEditable={setShowEditable} />
       )}
     </div>
-  );  
+  );
 };
 
 export default Tasks;

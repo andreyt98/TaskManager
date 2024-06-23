@@ -11,7 +11,7 @@ export default function Home() {
   return (
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 bg-gray-50 relative">
       <TaskForm tasks={tasks} setTasks={setTasks}/>
-      <TasksContainer tasks={tasks} setTasks={setTasks} setEditClicked={setEditClicked} setClickedId={setClickedId}/>
+      <TasksContainer tasks={tasks} setTasks={setTasks} setEditClicked={setEditClicked}/>
     </main>
   );
 }
