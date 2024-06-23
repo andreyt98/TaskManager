@@ -71,6 +71,7 @@ export const TaskForm = ({ tasks, setTasks }) => {
           }}
           value={inputValues.description}
           type="text"
+          style={{ borderRadius: "0" }}
           className="block p-2.5 w-full  text-sm text-gray-900 bg-gray-50 border border-gray-400 focus:ring-blue-500 focus:border-blue-500"
           placeholder="Description..."
           required
