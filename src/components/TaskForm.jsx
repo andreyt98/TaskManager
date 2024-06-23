@@ -3,7 +3,7 @@ import { useState, useEffect } from "react";
 import { categories } from "../helpers/taskConfig";
 
 export const TaskForm = ({ tasks, setTasks }) => {
-  const [inputValues, setInputValues] = useState({ title:"", description: "", category: "none" });
+  const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   useEffect(() => {
     localStorage.setItem("tasks", JSON.stringify(tasks));
   }, [tasks]);
@@ -28,11 +28,18 @@ export const TaskForm = ({ tasks, setTasks }) => {
       category: inputValues.category,
     };
 
-    const newTaskArray = [newTaskObj];
-    const inProgressTaskArray = [];
-    const completedTaskArray = [];
-
-    setTasks([...tasks, newTaskArray, inProgressTaskArray, completedTaskArray]);
+    if (tasks && tasks.length < 1) {
+      const newTaskArray = [newTaskObj];
+      const inProgressTaskArray = [];
+      const completedTaskArray = [];
+      setTasks([newTaskArray, inProgressTaskArray, completedTaskArray]);
+    } else {
+      const newTaskAr = tasks;
+      newTaskAr[0].push(newTaskObj);
+      setTasks(newTaskAr);
+      localStorage.clear();
+      localStorage.setItem("tasks", JSON.stringify(newTaskAr));
+    }
 
     setInputValues({ title: "", description: "", category: "none" });
   };
