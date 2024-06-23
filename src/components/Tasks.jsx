@@ -8,19 +8,16 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [newArray, setNewArray] = useState([]);
 
   const deleteTask = (event) => {
-    let temp;
+    let updatedArray;
 
-    tasks[0].forEach((sectionTask) => {
-      console.log(sectionTask);
-      if (sectionTask.id == task.id) {
-        console.log(sectionTask.id);
-        temp = tasks[0].filter((el) => el.id != sectionTask.id);
+    tasks.forEach((taskElement) => {
+      if (taskElement.id == task.id) {
+        updatedArray = tasks.filter((el) => el.id != taskElement.id);
 
-        const updatedArray = [temp, [...tasks[1]], [...tasks[2]]];
         localStorage.clear();
-        localStorage.setItem("tasks", JSON.stringify(updatedArray));
+        localStorage.setItem("newTasks", JSON.stringify(updatedArray));
 
-        const index = tasks.indexOf(sectionTask);
+        const index = tasks.indexOf(taskElement);
         tasks.splice(index, 1);
 
         setTasks(updatedArray);
