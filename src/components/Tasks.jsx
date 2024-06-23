@@ -47,60 +47,49 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
     setShowEditable(!showEditable);
   }
 
-
   return (
-    <div className={"task rounded-sm p-3 border border-gray-800 flex items-center justify-space-between " + (task.completed ? "completed border-success" : "")}>
-      {/* task text */}
-      <div className={"w-auto " + (task.completed ? "line-through text-gray-600" : "")}>{task.description}</div>
-      {task.category != "none" && <span className="bg-sky-200 text-gray-900 text-xs font-medium me-2 px-2.5 py-0.5  border-blue-400 rounded-xl">{task.category}</span>}
+    <div className={"task  border border-gray-300 flex flex-col items-center justify-space-between bg-gray-100 rounded-md text-black"}>
+      {/* title and dropdown */}
+      <div className="flex w-full justify-between border-b border-b-slate-300 p-2">
+        <p className="font-semibold">Title</p>
+
+        <div className="dropdown text-right relative text-sm">
+          <button>
+            <svg className="w-6 h-6 text-black  hover:bg-gray-200 rounded-lg px-0.5" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
+              <path stroke="currentColor" strokeLinecap="round" strokeWidth="2" d="M6 12h.01m6 0h.01m5.99 0h.01" />
+            </svg>
+          </button>
+          <div class="dropdown-menu absolute -left-8 top-6  bg-gray-50 border border-slate-300 rounded-md text-black flex flex-col justify-start gap-2 overflow-hidden">
+            <button onClick={showEditableInput}>
+              <p className=" cursor-pointer hover:bg-gray-100 px-3 py-2">Edit</p>
+            </button>
+
+            <button
+              onClick={(e) => {
+                deleteTask(e);
+              }}
+            >
+              <p className=" cursor-pointer hover:bg-gray-100 px-3 py-2">Delete</p>
+            </button>
+          </div>
+        </div>
+      </div>
+
+      {/*task  description   and category*/}
+      <div className="task text-start w-full p-2 flex flex-col gap-6">
+        {/* description */}
+        <p className=" font-light text-sm">{task.description}</p>
+
+        {/* category */}
+        {task.category != "none" && <p className="bg-green-50 text-green-700 text-xs font-medium me-2 px-2.5 py-1 rounded-md ring-1 ring-inset ring-green-600/20 self-start">{task.category}</p>}
+      </div>
 
       {/* modal to edit (will appear on edit button click) */}
-      {showEditable &&
-        <EditModal editableValue={editableValue} setEditableValue={setEditableValue} task={task} setTasks={setTasks} newArray={newArray} setNewArray={setNewArray} setShowEditable={setShowEditable}/>
-      }
-      {/* task options */}
-      <div className="w-auto ms-auto ">
-        <button role={"button"} onClick={showEditableInput}>
-          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="m14.304 4.844 2.852 2.852M7 7H4a1 1 0 0 0-1 1v10a1 1 0 0 0 1 1h11a1 1 0 0 0 1-1v-4.5m2.409-9.91a2.017 2.017 0 0 1 0 2.853l-6.844 6.844L8 14l.713-3.565 6.844-6.844a2.015 2.015 0 0 1 2.852 0Z"
-            />
-          </svg>
-        </button>
-
-        <button
-          onClick={(e) => {
-            deleteTask(e);
-          }}
-        >
-          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path
-              stroke="currentColor"
-              strokeLinecap="round"
-              strokeLinejoin="round"
-              strokeWidth="2"
-              d="M5 7h14m-9 3v8m4-8v8M10 3h4a1 1 0 0 1 1 1v3H9V4a1 1 0 0 1 1-1ZM6 7h12v13a1 1 0 0 1-1 1H7a1 1 0 0 1-1-1V7Z"
-            />
-          </svg>
-        </button>
-
-        <button
-          onClick={(e) => {
-            checkTask(e);
-          }}
-          defaultChecked={task.completed}
-        >
-          <svg className="w-6 h-6 text-gray-800 dark:text-white" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" width="24" height="24" fill="none" viewBox="0 0 24 24">
-            <path stroke="currentColor" strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M8.5 11.5 11 14l4-4m6 2a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
-          </svg>
-        </button>
-      </div>
+      {showEditable && (
+        <EditModal editableValue={editableValue} setEditableValue={setEditableValue} task={task} setTasks={setTasks} newArray={newArray} setNewArray={setNewArray} setShowEditable={setShowEditable} />
+      )}
     </div>
-  );
+  );  
 };
 
 export default Tasks;
