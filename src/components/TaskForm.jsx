@@ -28,24 +28,29 @@ export const TaskForm = ({ tasks, setTasks }) => {
       category: inputValues.category,
     };
 
-    if (tasks && tasks.length < 1) {
-      const newTaskArray = [newTaskObj];
+    let newTaskArray;
+    if (tasks.length < 1) {
       const inProgressTaskArray = [];
       const completedTaskArray = [];
-      setTasks([newTaskArray, inProgressTaskArray, completedTaskArray]);
+      newTaskArray = [[newTaskObj], inProgressTaskArray, completedTaskArray];
     } else {
-      const newTaskAr = tasks;
-      newTaskAr[0].push(newTaskObj);
-      setTasks(newTaskAr);
-      localStorage.clear();
-      localStorage.setItem("tasks", JSON.stringify(newTaskAr));
+      newTaskArray = [...tasks];
+      newTaskArray[0].push(newTaskObj);
     }
+    setTasks(newTaskArray);
+    localStorage.clear();
+    localStorage.setItem("tasks", JSON.stringify(newTaskArray));
 
     setInputValues({ title: "", description: "", category: "none" });
   };
 
   return (
-    <form className="max-w-lg mx-auto" onSubmit={submitTask}>
+    <form
+      className="max-w-lg mx-auto"
+      onSubmit={(e) => {
+        submitTask(e);
+      }}
+    >
       <div className="flex relative w-full">
         {/* title */}
         <input
