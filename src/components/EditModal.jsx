@@ -1,9 +1,11 @@
 "use client";
-import { useState } from "react";
+import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig";
+import { Context } from "@/context/Context";
 
 export function EditModal({ task, setTasks, setShowEditable }) {
   const [editableValue, setEditableValue] = useState({ title: task.title, description: task.description, category: task.category });
+  const { setMessage } = useContext(Context);
 
   function edit(e) {
     e.preventDefault();
@@ -39,6 +41,7 @@ export function EditModal({ task, setTasks, setShowEditable }) {
     });
 
     setShowEditable(false);
+    setMessage({ message: "Task updated successfully!", severity: "success", open: true });
   }
 
   return (

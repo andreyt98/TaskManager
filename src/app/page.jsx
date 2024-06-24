@@ -4,13 +4,13 @@ import { TaskForm } from "../components/TaskForm";
 import { TasksContainer } from "@/components/TasksContainer";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Context } from "@/context/Context";
-
+import { Snackbar, Alert } from "@mui/material";
 export default function Home() {
   const [newTasks, setNewTasks] = useState(JSON.parse(localStorage.getItem("newTasks")) || []);
   const [inProgresstasks, setInProgressTasks] = useState(JSON.parse(localStorage.getItem("inProgressTasks")) || []);
   const [completedTasks, setCompletedTasks] = useState(JSON.parse(localStorage.getItem("completedTasks")) || []);
   const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
-
+  const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const contextValues = {
     newTasks,
     setNewTasks,
@@ -18,6 +18,7 @@ export default function Home() {
     setInProgressTasks,
     completedTasks,
     setCompletedTasks,
+    setMessage,
   };
 
   const handleOnDragEnd = (result) => {
@@ -87,6 +88,24 @@ export default function Home() {
           <TaskForm />
           <TasksContainer setEditClicked={setEditClicked} />
         </DragDropContext>
+        <Snackbar
+          open={message.open}
+          autoHideDuration={2500}
+          onClose={() => {
+            setMessage({ ...message, open: false });
+          }}
+        >
+          <Alert
+            onClose={() => {
+              setMessage({ ...message, open: false });
+            }}
+            severity={message.severity}
+            variant="filled"
+            sx={{ width: "100%" }}
+          >
+            {message.message}
+          </Alert>
+        </Snackbar>
       </main>
     </Context.Provider>
   );

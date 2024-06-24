@@ -6,7 +6,7 @@ import { Context } from "@/context/Context";
 export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   const [showEditable, setShowEditable] = useState(false);
-  const { newTasks, setNewTasks } = useContext(Context);
+  const { newTasks, setNewTasks,setMessage } = useContext(Context);
   useEffect(() => {
     localStorage.setItem("newTasks", JSON.stringify(newTasks));
   }, [newTasks]);
@@ -33,6 +33,7 @@ export const TaskForm = () => {
     setInputValues({ title: "", description: "", category: "none" });
     e.target.reset();
     setShowEditable(false);
+    setMessage({ message: "Task added successfully!", severity: 'success', open: true });
   };
 
   return (

@@ -1,9 +1,10 @@
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { EditModal } from "./EditModal";
+import { Context } from "@/context/Context";
 
-const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
+const Tasks = ({ setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
-
+  const {setMessage } = useContext(Context);
   const deleteTask = (event) => {
     Object.entries(localStorage).forEach((localSEntry) => {
       const eachLSValue = JSON.parse(localSEntry[1]);
@@ -26,6 +27,8 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
         });
       }
     });
+    setMessage({ message: "Task deleted!", severity: 'warning', open: true });
+
   };
 
   function showEditableInput() {
