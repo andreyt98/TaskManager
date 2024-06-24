@@ -28,6 +28,7 @@ export const TaskForm = ({ tasks, setTasks }) => {
     localStorage.setItem("newTasks", JSON.stringify(newTaskArray));
 
     setInputValues({ title: "", description: "", category: "none" });
+    e.target.reset();
   };
 
   return (
