@@ -6,9 +6,11 @@ import { DragDropContext } from "react-beautiful-dnd";
 import { Context } from "@/context/Context";
 import { Snackbar, Alert } from "@mui/material";
 export default function Home() {
-  const [newTasks, setNewTasks] = useState(JSON.parse(localStorage.getItem("newTasks")) || []);
-  const [inProgresstasks, setInProgressTasks] = useState(JSON.parse(localStorage.getItem("inProgressTasks")) || []);
-  const [completedTasks, setCompletedTasks] = useState(JSON.parse(localStorage.getItem("completedTasks")) || []);
+  const [newTasks, setNewTasks] = useState(typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("newTasks")) : []);
+  const [inProgresstasks, setInProgressTasks] = useState(
+    typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("inProgressTasks")) : []
+  );
+  const [completedTasks, setCompletedTasks] = useState(typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("completedTasks")) : []);
   const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const contextValues = {
