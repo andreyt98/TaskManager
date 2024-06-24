@@ -5,19 +5,25 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
 
   const deleteTask = (event) => {
-    let updatedArray;
+    Object.entries(localStorage).forEach((localSEntry) => {
+      const eachLSValue = JSON.parse(localSEntry[1]);
+      let stateArrayToModify;
+      let arrayNameToMod;
+      let resultAr;
+      if (eachLSValue && eachLSValue.length > 0) {
+        eachLSValue.forEach((ObjectsFromLSArrays) => {
+          if (ObjectsFromLSArrays.id == task.id) {
+            arrayNameToMod = localSEntry[0];
+            stateArrayToModify = JSON.parse(localSEntry[1]);
 
-    tasks.forEach((taskElement) => {
-      if (taskElement.id == task.id) {
-        updatedArray = tasks.filter((el) => el.id != taskElement.id);
+            resultAr = stateArrayToModify.filter((element) => {
+              return element.id != task.id;
+            });
 
-        localStorage.clear();
-        localStorage.setItem("newTasks", JSON.stringify(updatedArray));
-
-        const index = tasks.indexOf(taskElement);
-        tasks.splice(index, 1);
-
-        setTasks(updatedArray);
+            localStorage.setItem(arrayNameToMod, JSON.stringify(resultAr));
+            setTasks(resultAr);
+          }
+        });
       }
     });
   };
