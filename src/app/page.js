@@ -10,7 +10,7 @@ export default function Home() {
   const [newTasks, setNewTasks] = useState(JSON.parse(localStorage.getItem("newTasks")) || []);
   const [inProgresstasks, setInProgressTasks] = useState(JSON.parse(localStorage.getItem("inProgressTasks")) || []);
   const [completedTasks, setCompletedTasks] = useState(JSON.parse(localStorage.getItem("completedTasks")) || []);
-  const [editClicked, setEditClicked] = useState(false);
+  const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
 
   const contextValues = {
     newTasks, 
@@ -93,7 +93,7 @@ export default function Home() {
   <Context.Provider value={contextValues}>
     <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 bg-gray-50 relative">
         <DragDropContext onDragEnd={handleOnDragEnd}>
-          <TaskForm tasks={newTasks} setTasks={setNewTasks}/>
+          <TaskForm />
           <TasksContainer  setEditClicked={setEditClicked} />
         </DragDropContext>
       </main>

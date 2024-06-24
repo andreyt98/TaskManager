@@ -44,10 +44,15 @@ export function EditModal({ task, setTasks, setShowEditable }) {
   return (
     /* edit modal */
     <>
-      <div className={`flex absolute h-screen w-full top-0 left-0 p-10 flex-col justify-center items-center `}>
-        <div className="overlay bg-black opacity-85 absolute left-0 top-0 w-full h-full"></div>
+      <div className={`flex fixed z-20 h-screen w-full top-0 left-0 p-10 flex-col justify-center items-center `}>
+        <div
+          className="overlay bg-black opacity-85 absolute left-0 top-0 w-full h-full"
+          onClick={() => {
+            setShowEditable(false);
+          }}
+        ></div>
 
-        <div className=" absolute w-11/12 lg:w-1/2 2xl:w-6/12 mx-auto rounded-lg border-gray-100 bg-gray-50 z-20 shadow-md text-black">
+        <div className=" max-md:-translate-y-14  absolute w-11/12 lg:w-1/2 2xl:w-6/12 mx-auto rounded-lg border-gray-100 bg-gray-50 z-20 shadow-md text-black">
           <div className="flex items-center justify-between p-4 md:p-5 border-b border-b-gray-200 rounded-t ">
             <h3 className="text-lg font-semibold">Edit Task</h3>
             <button
@@ -69,7 +74,7 @@ export function EditModal({ task, setTasks, setShowEditable }) {
               edit(e);
             }}
           >
-            <div className="grid gap-4 mb-4 grid-cols-2">
+            <div className="grid gap-6 mb-4 grid-cols-2">
               <div className="col-span-2">
                 <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 ">
                   Title
@@ -124,7 +129,7 @@ export function EditModal({ task, setTasks, setShowEditable }) {
 
             <button
               type="submit"
-              className="text-white inline-flex items-center bg-blue-700 hover:bg-blue-800 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 text-center "
+              className="text-white mt-2  max-sm:w-full bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center "
             >
               Update
             </button>
