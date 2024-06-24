@@ -1,26 +1,43 @@
 "use client";
+import { useState } from "react";
 import { categories } from "../helpers/taskConfig";
 
-export function EditModal({ editableValue, setEditableValue, task, setTasks, newArray, setShowEditable }) {
+export function EditModal({ task, setTasks, setShowEditable }) {
+  const [editableValue, setEditableValue] = useState({ title: task.title, description: task.description, category: task.category });
+
   function edit(e) {
     e.preventDefault();
     if (editableValue.title == "" || editableValue.description == "") {
       return;
     }
 
-    if (newArray && newArray.length > 0) {
-      newArray.forEach((el) => {
-        if (el.id == task.id) {
-          el.title = editableValue.title;
-          el.description = editableValue.description;
-          el.category = editableValue.category;
+    Object.entries(localStorage).forEach((localSEntry) => {
+      const eachLSValue = JSON.parse(localSEntry[1]);
+      let stateArrayToModify;
+      let arrayNameToMod;
+      let ObjToModify;
+      let resultAr;
+      if (eachLSValue && eachLSValue.length > 0) {
+        eachLSValue.forEach((ObjectsFromLSArrays) => {
+          if (ObjectsFromLSArrays.id == task.id) {
+            arrayNameToMod = localSEntry[0];
+            stateArrayToModify = JSON.parse(localSEntry[1]);
+            ObjToModify = ObjectsFromLSArrays;
+            ObjToModify.title = editableValue.title;
+            ObjToModify.description = editableValue.description;
+            ObjToModify.category = editableValue.category;
+            resultAr = stateArrayToModify.filter((element) => {
+              return element.id != task.id;
+            });
+            resultAr.push(ObjToModify);
 
-          localStorage.clear();
-          localStorage.setItem("tasks", JSON.stringify(newArray));
-        }
-      });
-      setTasks(newArray);
-    }
+            localStorage.setItem(arrayNameToMod, JSON.stringify(resultAr));
+            setTasks(resultAr);
+          }
+        });
+      }
+    });
+
     setShowEditable(false);
   }
 
@@ -61,7 +78,7 @@ export function EditModal({ editableValue, setEditableValue, task, setTasks, new
                   onChange={(e) => {
                     setEditableValue({ ...editableValue, title: e.target.value });
                   }}
-                  defaultValue={task.title}
+                  value={editableValue.title}
                   id="title"
                   rows="4"
                   className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
@@ -77,7 +94,7 @@ export function EditModal({ editableValue, setEditableValue, task, setTasks, new
                   onChange={(e) => {
                     setEditableValue({ ...editableValue, description: e.target.value });
                   }}
-                  defaultValue={task.description}
+                  value={editableValue.description}
                   id="description"
                   rows="4"
                   className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"

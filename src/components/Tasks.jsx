@@ -1,11 +1,8 @@
-import { useRef } from "react";
-import { useState, useEffect } from "react";
+import { useState } from "react";
 import { EditModal } from "./EditModal";
 
 const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
-  const [editableValue, setEditableValue] = useState({ title: "", description: "", category: "none" });
-  const [newArray, setNewArray] = useState([]);
 
   const deleteTask = (event) => {
     let updatedArray;
@@ -24,10 +21,6 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
       }
     });
   };
-
-  useEffect(() => {
-    setNewArray([...tasks]);
-  }, [tasks]);
 
   function showEditableInput() {
     setEditClicked(true);
@@ -72,9 +65,7 @@ const Tasks = ({ tasks, setTasks, task, setEditClicked }) => {
       </div>
 
       {/* modal to edit (will appear on edit button click) */}
-      {showEditable && (
-        <EditModal editableValue={editableValue} setEditableValue={setEditableValue} task={task} setTasks={setTasks} newArray={newArray} setNewArray={setNewArray} setShowEditable={setShowEditable} />
-      )}
+      {showEditable && <EditModal task={task} setTasks={setTasks} setShowEditable={setShowEditable} />}
     </div>
   );
 };
