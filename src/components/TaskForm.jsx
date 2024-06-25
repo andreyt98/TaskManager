@@ -1,41 +1,22 @@
 "use client";
-import { useState, useEffect, useContext } from "react";
-import { categories } from "../helpers/taskConfig";
+import { useState, useContext } from "react";
+import { categories } from "../helpers/taskConfig.ts";
 import { Context } from "@/context/Context";
+import { submitTask } from "@/helpers/submitTask";
 
 export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   const [showEditable, setShowEditable] = useState(false);
-  const { newTasks, setNewTasks,setMessage } = useContext(Context);
+  const { newTasks, setNewTasks, setMessage } = useContext(Context);
 
-  const submitTask = (e) => {
-    e.preventDefault();
+  const handleSubmit = (event) => {
+    event.preventDefault();
+    submitTask(inputValues, newTasks,setNewTasks);
 
-    if(inputValues.title == "" || inputValues.description==""){
-      return;
-    }
-
-    const newTaskObj = {
-      id: Math.random().toString(36).substring(2) + Date.now().toString(36),
-      state: "new",
-      title: inputValues.title,
-      description: inputValues.description,
-      category: inputValues.category,
-    };
-
-    let newTaskArray;
-    if (newTasks.length < 1) {
-      newTaskArray = [newTaskObj];
-    } else {
-      newTaskArray = [...newTasks, newTaskObj];
-    }
-    setNewTasks(newTaskArray);
-    localStorage.setItem("newTasks", JSON.stringify(newTaskArray));
-
+    event.target.reset();
     setInputValues({ title: "", description: "", category: "none" });
-    e.target.reset();
     setShowEditable(false);
-    setMessage({ message: "Task added successfully!", severity: 'success', open: true });
+    setMessage({ message: "Task added successfully!", severity: "success", open: true });
   };
 
   return (
@@ -83,7 +64,7 @@ export const TaskForm = () => {
             <form
               className="p-4 md:p-5"
               onSubmit={(e) => {
-                submitTask(e);
+                handleSubmit(e);
               }}
             >
               <div className="grid gap-6 mb-4 grid-cols-2 ">

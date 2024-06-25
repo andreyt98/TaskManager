@@ -1,6 +1,6 @@
 "use client";
 import { useContext, useState } from "react";
-import { categories } from "../helpers/taskConfig";
+import { categories } from "../helpers/taskConfig.ts";
 import { Context } from "@/context/Context";
 
 export function EditModal({ task, setTasks, setShowEditable }) {
