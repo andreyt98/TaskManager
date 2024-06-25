@@ -7,9 +7,13 @@ export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   const [showEditable, setShowEditable] = useState(false);
   const { newTasks, setNewTasks,setMessage } = useContext(Context);
-  
+
   const submitTask = (e) => {
     e.preventDefault();
+
+    if(inputValues.title == "" || inputValues.description==""){
+      return;
+    }
 
     const newTaskObj = {
       id: Math.random().toString(36).substring(2) + Date.now().toString(36),
@@ -92,6 +96,7 @@ export const TaskForm = () => {
                       setInputValues({ ...inputValues, title: e.target.value });
                     }}
                     value={inputValues.title}
+                    required
                     id="title"
                     rows="4"
                     className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
@@ -108,6 +113,7 @@ export const TaskForm = () => {
                       setInputValues({ ...inputValues, description: e.target.value });
                     }}
                     value={inputValues.description}
+                    required
                     id="description"
                     rows="4"
                     className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
