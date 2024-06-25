@@ -7,9 +7,7 @@ export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   const [showEditable, setShowEditable] = useState(false);
   const { newTasks, setNewTasks,setMessage } = useContext(Context);
-  useEffect(() => {
-    localStorage.setItem("newTasks", JSON.stringify(newTasks));
-  }, [newTasks]);
+  
   const submitTask = (e) => {
     e.preventDefault();
 

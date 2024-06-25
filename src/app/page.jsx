@@ -1,16 +1,14 @@
 "use client";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { TaskForm } from "../components/TaskForm";
 import { TasksContainer } from "@/components/TasksContainer";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Context } from "@/context/Context";
 import { Snackbar, Alert } from "@mui/material";
 export default function Home() {
-  const [newTasks, setNewTasks] = useState(typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("newTasks")) : []);
-  const [inProgresstasks, setInProgressTasks] = useState(
-    typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("inProgressTasks")) : []
-  );
-  const [completedTasks, setCompletedTasks] = useState(typeof window !== "undefined" && window.localStorage && localStorage.getItem("user") ? JSON.parse(localStorage.getItem("completedTasks")) : []);
+  const [newTasks, setNewTasks] = useState([]);
+  const [inProgresstasks, setInProgressTasks] = useState([]);
+  const [completedTasks, setCompletedTasks] = useState([]);
   const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const contextValues = {
@@ -83,6 +81,13 @@ export default function Home() {
     }
     // TODO: fix this spaghetti
   };
+
+  useEffect(() => {
+    setNewTasks(JSON.parse(localStorage.getItem("newTasks")) || []);
+    setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks")) || []);
+    setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks")) || []);
+  }, []);
+
   return (
     <Context.Provider value={contextValues}>
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 bg-gray-50 relative">
