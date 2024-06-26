@@ -1,6 +1,6 @@
 import { Dispatch, SetStateAction } from "react";
 
-type typeOfInputValues = {
+export type typeOfInputValues = {
     title: string,
     description: string,
     category: string

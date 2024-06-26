@@ -2,43 +2,16 @@
 import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig.ts";
 import { Context } from "@/context/Context";
+import { editTask } from "@/helpers/editTask.ts";
 
 export function EditModal({ task, setTasks, setShowEditable }) {
   const [editableValue, setEditableValue] = useState({ title: task.title, description: task.description, category: task.category });
   const { setMessage } = useContext(Context);
 
-  function edit(e) {
+  function handleEdit(e) {
     e.preventDefault();
-    if (editableValue.title == "" || editableValue.description == "") {
-      return;
-    }
 
-    Object.entries(localStorage).forEach((localSEntry) => {
-      const eachLSValue = JSON.parse(localSEntry[1]);
-      let stateArrayToModify;
-      let arrayNameToMod;
-      let ObjToModify;
-      let resultAr;
-      if (eachLSValue && eachLSValue.length > 0) {
-        eachLSValue.forEach((ObjectsFromLSArrays) => {
-          if (ObjectsFromLSArrays.id == task.id) {
-            arrayNameToMod = localSEntry[0];
-            stateArrayToModify = JSON.parse(localSEntry[1]);
-            ObjToModify = ObjectsFromLSArrays;
-            ObjToModify.title = editableValue.title;
-            ObjToModify.description = editableValue.description;
-            ObjToModify.category = editableValue.category;
-            resultAr = stateArrayToModify.filter((element) => {
-              return element.id != task.id;
-            });
-            resultAr.push(ObjToModify);
-
-            localStorage.setItem(arrayNameToMod, JSON.stringify(resultAr));
-            setTasks(resultAr);
-          }
-        });
-      }
-    });
+    editTask(editableValue, task, setTasks);
 
     setShowEditable(false);
     setMessage({ message: "Task updated successfully!", severity: "success", open: true });
@@ -74,7 +47,7 @@ export function EditModal({ task, setTasks, setShowEditable }) {
           <form
             className="p-4 md:p-5"
             onSubmit={(e) => {
-              edit(e);
+              handleEdit(e);
             }}
           >
             <div className="grid gap-6 mb-4 grid-cols-2">
