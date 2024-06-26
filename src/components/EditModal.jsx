@@ -1,12 +1,12 @@
 "use client";
 import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig.ts";
-import { Context } from "@/context/Context";
 import { editTask } from "@/helpers/editTask.ts";
+import { AppContext } from "@/app/page";
 
 export function EditModal({ task, setTasks, setShowEditable }) {
   const [editableValue, setEditableValue] = useState({ title: task.title, description: task.description, category: task.category });
-  const { setMessage } = useContext(Context);
+  const { setMessage } = useContext(AppContext);
 
   function handleEdit(e) {
     e.preventDefault();

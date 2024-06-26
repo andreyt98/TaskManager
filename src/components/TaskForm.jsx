@@ -1,13 +1,12 @@
 "use client";
 import { useState, useContext } from "react";
 import { categories } from "../helpers/taskConfig.ts";
-import { Context } from "@/context/Context";
 import { submitTask } from "@/helpers/submitTask";
-
+import { AppContext } from "@/app/page";
 export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });
   const [showEditable, setShowEditable] = useState(false);
-  const { newTasks, setNewTasks, setMessage } = useContext(Context);
+  const { newTasks, setNewTasks, setMessage } = useContext(AppContext);
 
   const handleSubmit = (event) => {
     event.preventDefault();
