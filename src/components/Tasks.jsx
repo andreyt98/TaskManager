@@ -1,32 +1,13 @@
 import { useState, useContext } from "react";
 import { EditModal } from "./EditModal";
 import { Context } from "@/context/Context";
+import { deleteTask } from "@/helpers/deleteTask";
 
 const Tasks = ({ setTasks, task, setEditClicked }) => {
   const [showEditable, setShowEditable] = useState(false);
   const {setMessage } = useContext(Context);
-  const deleteTask = (event) => {
-    Object.entries(localStorage).forEach((localSEntry) => {
-      const eachLSValue = JSON.parse(localSEntry[1]);
-      let stateArrayToModify;
-      let arrayNameToMod;
-      let resultAr;
-      if (eachLSValue && eachLSValue.length > 0) {
-        eachLSValue.forEach((ObjectsFromLSArrays) => {
-          if (ObjectsFromLSArrays.id == task.id) {
-            arrayNameToMod = localSEntry[0];
-            stateArrayToModify = JSON.parse(localSEntry[1]);
-
-            resultAr = stateArrayToModify.filter((element) => {
-              return element.id != task.id;
-            });
-
-            localStorage.setItem(arrayNameToMod, JSON.stringify(resultAr));
-            setTasks(resultAr);
-          }
-        });
-      }
-    });
+  const handleDelete = () => {
+    deleteTask(task, setTasks)
     setMessage({ message: "Task deleted!", severity: 'warning', open: true });
 
   };
@@ -55,7 +36,7 @@ const Tasks = ({ setTasks, task, setEditClicked }) => {
 
             <button
               onClick={(e) => {
-                deleteTask(e);
+                handleDelete(e);
               }}
             >
               <p className=" cursor-pointer hover:bg-gray-100 px-3 py-2">Delete</p>
