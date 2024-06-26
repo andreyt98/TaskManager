@@ -1,15 +1,14 @@
 "use client";
 import { useState, useEffect } from "react";
 import { TaskForm } from "../components/TaskForm";
-import { TasksContainer } from "@/components/TasksContainer";
 import { DragDropContext } from "react-beautiful-dnd";
-import { Context } from "@/context/Context";
 import { Snackbar, Alert } from "@mui/material";
+import { TasksContainer } from "../components/TasksContainer";
+import { Context } from "../context/Context";
 export default function Home() {
   const [newTasks, setNewTasks] = useState([]);
   const [inProgresstasks, setInProgressTasks] = useState([]);
   const [completedTasks, setCompletedTasks] = useState([]);
-  const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const contextValues = {
     newTasks,
@@ -93,7 +92,7 @@ export default function Home() {
       <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 bg-gray-50 relative">
         <DragDropContext onDragEnd={handleOnDragEnd}>
           <TaskForm />
-          <TasksContainer setEditClicked={setEditClicked} />
+          <TasksContainer />
         </DragDropContext>
         <Snackbar
           open={message.open}

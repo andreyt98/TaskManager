@@ -1,8 +1,8 @@
 "use client";
 import { useState, useContext } from "react";
 import { categories } from "../helpers/taskConfig.ts";
-import { Context } from "@/context/Context";
-import { submitTask } from "@/helpers/submitTask";
+import { Context } from "../context/Context";
+import { submitTask } from "../helpers/submitTask";
 
 export const TaskForm = () => {
   const [inputValues, setInputValues] = useState({ title: "", description: "", category: "none" });

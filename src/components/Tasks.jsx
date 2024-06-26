@@ -1,15 +1,15 @@
 import { useState, useContext } from "react";
 import { EditModal } from "./EditModal";
-import { Context } from "@/context/Context";
-import { deleteTask } from "@/helpers/deleteTask";
+import { Context } from "../context/Context";
+import { deleteTask } from "../helpers/deleteTask";
 
-const Tasks = ({ setTasks, task, setEditClicked }) => {
+const Tasks = ({ setTasks, task }) => {
   const [showEditable, setShowEditable] = useState(false);
-  const {setMessage } = useContext(Context);
+  const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
+  const { setMessage } = useContext(Context);
   const handleDelete = () => {
-    deleteTask(task, setTasks)
-    setMessage({ message: "Task deleted!", severity: 'warning', open: true });
-
+    deleteTask(task, setTasks);
+    setMessage({ message: "Task deleted!", severity: "warning", open: true });
   };
 
   function showEditableInput() {

@@ -2,10 +2,10 @@
 import { Droppable } from "react-beautiful-dnd";
 import { useContext } from "react";
 import DraggableElement from "./DraggableElement";
-import { AppContext } from "@/app/page";
+import { Context } from "../context/Context";
 
 export function TasksContainer() {
-  const { newTasks, setNewTasks, inProgresstasks, setInProgressTasks, completedTasks, setCompletedTasks } = useContext(AppContext);
+  const { newTasks, setNewTasks, inProgresstasks, setInProgressTasks, completedTasks, setCompletedTasks } = useContext(Context);
 
   return (
     <div className="p-2 flex flex-col justify-center lg:flex-row gap-8 lg:w-11/12 xl:w-9/12 w-full">
