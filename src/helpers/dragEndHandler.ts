@@ -42,28 +42,24 @@ export const dragEndHandler = (
   localStorage.setItem(source, JSON.stringify(arrayWithoutMovedElement));
   setArray(source, setNewTasks, setInProgressTasks, setCompletedTasks, arrayWithoutMovedElement);
 
-  moveTaskToDestination(source, destination, arrayWithoutMovedElement, elementToMove, setNewTasks, setInProgressTasks, setCompletedTasks);
+  moveTaskToDestination( destination, elementToMove, setNewTasks, setInProgressTasks, setCompletedTasks);
 };
 
 export const moveTaskToDestination = (
-  source: string,
   destination: string,
-  arrayWithoutMovedElement: typeOfTaskObject[],
   elementToMove: typeOfTaskObject,
   setNewTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
   setInProgressTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
   setCompletedTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>
 ) => {
   // agregamos el elemento al array destination
-  const isDestinationInLocalS = JSON.parse(localStorage.getItem(destination) || "");
-
+  const isDestinationInLocalS: typeOfTaskObject[] = JSON.parse(localStorage.getItem(destination) || "[]");
   //si no hay nada en el destination array en el ls
   if (isDestinationInLocalS && isDestinationInLocalS.length > 0) {
     //TODO: actualizar el LS cada vez que se actualizan los arrays para evitar estar seteando tanto los arrays
 
     //actualizar el localS
     isDestinationInLocalS.push(elementToMove);
-
     localStorage.setItem(destination, JSON.stringify(isDestinationInLocalS));
 
     //actualizar array para la parte visual
