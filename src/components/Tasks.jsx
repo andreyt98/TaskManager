@@ -2,14 +2,26 @@ import { useState, useContext } from "react";
 import { EditModal } from "./EditModal";
 import { Context } from "../context/Context";
 import { deleteTask } from "../helpers/deleteTask";
+const NO_DATA_ERROR = 0;
 
 const Tasks = ({ setTasks, task }) => {
   const [showEditable, setShowEditable] = useState(false);
   const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
   const { setMessage } = useContext(Context);
-  const handleDelete = () => {
-    deleteTask(task, setTasks);
-    setMessage({ message: "Task deleted!", severity: "warning", open: true });
+  const handleDelete = async () => {
+    try {
+      const deletedTask = await deleteTask(task);
+       setTasks(deletedTask);
+       setMessage({ message: "Task deleted!", severity: "warning", open: true });
+    } catch (error) {
+
+      if (error.reason && error.reason.id === NO_DATA_ERROR) {
+        setMessage({ message: error.reason.text, severity: "warning", open: true });
+        setTasks([]);
+      } else {
+        setMessage({ message: "Error deleting task!", severity: "error", open: true });
+      }
+    }
   };
 
   function showEditableInput() {

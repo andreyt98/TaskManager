@@ -41,6 +41,7 @@ export const dragEndHandler = (
 
   localStorage.setItem(source, JSON.stringify(arrayWithoutMovedElement));
   setArray(source, setNewTasks, setInProgressTasks, setCompletedTasks, arrayWithoutMovedElement);
+  elementToMove.state = destination;
 
   moveTaskToDestination( destination, elementToMove, setNewTasks, setInProgressTasks, setCompletedTasks);
 };

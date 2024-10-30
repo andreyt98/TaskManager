@@ -1,27 +1,39 @@
-import { Dispatch, SetStateAction } from "react";
 import { typeOfTaskObject } from "./submitTask";
 
-export const deleteTask = (task: typeOfTaskObject, setTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>) => {
-  Object.entries(localStorage).forEach((localSEntry) => {
-    const valueOfEntry = JSON.parse(localSEntry[1]);
-    let arrayToModify: typeOfTaskObject[];
-    let arrayNameToMod: string;
-    let resultArray: typeOfTaskObject[];
+export const deleteTask = (task: typeOfTaskObject): Promise<typeOfTaskObject[]> => {
+  try {
+    if (localStorage.length > 0) {
+      let resultArray: typeOfTaskObject[] = [];
 
-    if (valueOfEntry && valueOfEntry.length > 0) {
-      valueOfEntry.forEach((ObjectsFromLSArrays: typeOfTaskObject) => {
-        if (ObjectsFromLSArrays.id == task.id) {
-          arrayNameToMod = localSEntry[0];
-          arrayToModify = JSON.parse(localSEntry[1]);
+      const taskExistsInLS = Object.keys(localStorage).includes(task.state);
 
-          resultArray = arrayToModify.filter((element) => {
-            return element.id != task.id;
+      if (taskExistsInLS) {
+        const arrayFromLSToDelete = localStorage[task.state];
+
+        if (arrayFromLSToDelete && JSON.parse(arrayFromLSToDelete).length > 0) {
+          JSON.parse(arrayFromLSToDelete).forEach((taskObject: typeOfTaskObject) => {
+            if (taskObject.id == task.id) {
+              resultArray = JSON.parse(arrayFromLSToDelete).filter((element: typeOfTaskObject) => {
+                return element.id != task.id;
+              });
+              localStorage.setItem(task.state, JSON.stringify(resultArray));
+              return Promise.resolve(resultArray);
+            } else {
+              return Promise.reject("id not present in data");
+            }
           });
-
-          localStorage.setItem(arrayNameToMod, JSON.stringify(resultArray));
-          setTasks(resultArray);
+        } else {
+          return Promise.reject({ reason: { id: 0, text: "Task list was already empty, UI updated..." } });
         }
-      });
+      } else {
+        return Promise.reject({ reason: { id: 0, text: "No data in localstorage related to our app, UI updated..." } });
+      }
+
+      return Promise.resolve(resultArray);
+    } else {
+      return Promise.reject("no data in localstorage");
     }
-  });
+  } catch (error) {
+    throw error;
+  }
 };
