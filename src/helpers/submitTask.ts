@@ -22,7 +22,7 @@ export const submitTask = (inputValues: typeOfInputValues, newTasks: typeOfTaskO
 
     const newTaskObj: typeOfTaskObject = {
       id: Math.random().toString(36).substring(2) + Date.now().toString(36),
-      state: "new",
+      state: "newTasks",
       title: inputValues.title,
       description: inputValues.description,
       category: inputValues.category,
