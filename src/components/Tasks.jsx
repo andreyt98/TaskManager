@@ -18,9 +18,10 @@ const Tasks = ({ setTasks, task }) => {
       if (error.reason && error.reason.id === NO_DATA_ERROR) {
         setMessage({ message: error.reason.text, severity: "warning", open: true });
         setTasks([]);
-      } else {
-        setMessage({ message: "Error deleting task!", severity: "error", open: true });
-      }
+        return;
+      } 
+      setMessage({ message: "Error deleting task!", severity: "error", open: true });
+      
     }
   };
 
