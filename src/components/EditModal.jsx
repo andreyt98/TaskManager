@@ -3,19 +3,34 @@ import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig.ts";
 import { Context } from "../context/Context";
 import { editTask } from "../helpers/editTask.ts";
+const NO_DATA_ERROR = 0;
 
 export function EditModal({ task, setTasks, setShowEditable }) {
   const [editableValue, setEditableValue] = useState({ title: task.title, description: task.description, category: task.category });
   const { setMessage } = useContext(Context);
 
-  function handleEdit(e) {
+  const handleEdit = async (e) => {
     e.preventDefault();
 
-    editTask(editableValue, task, setTasks);
+    if (editableValue.title == "" || editableValue.description == "") {
+      return;
+    }
+
+    try {
+      const taskEdited = await editTask(editableValue, task);
+      setTasks(taskEdited);
+      setMessage({ message: "Task updated successfully!", severity: "success", open: true });
+    } catch (error) {
+      if (error.reason && error.reason.id === NO_DATA_ERROR) {
+        setMessage({ message: error.reason.text, severity: "warning", open: true });
+        setTasks([]);
+      } else {
+        setMessage({ message: "Error editing task!", severity: "error", open: true });
+      }
+    }
 
     setShowEditable(false);
-    setMessage({ message: "Task updated successfully!", severity: "success", open: true });
-  }
+  };
 
   return (
     /* edit modal */

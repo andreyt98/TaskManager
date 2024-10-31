@@ -1,39 +1,38 @@
-import { Dispatch, SetStateAction } from "react";
 import { typeOfInputValues, typeOfTaskObject } from "./submitTask";
 
-export const editTask = (editableValue: typeOfInputValues, task: typeOfTaskObject, setTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>) => {
- 
-  if (editableValue.title == "" || editableValue.description == "") {
-    return;
+export const editTask = (editableValue: typeOfInputValues, task: typeOfTaskObject): Promise<typeOfTaskObject[]> => {
+  if (localStorage.length === 0 || !localStorage.getItem(task.state)) {
+    return Promise.reject({ reason: { id: 0, text: "No task in this list, UI updated..." } });
   }
 
-  Object.entries(localStorage).forEach((localSEntry) => {
-    const valueOfEntry = JSON.parse(localSEntry[1]);
-    let arrayToModify: typeOfTaskObject[];
-    let arrayNameToModify: string;
-    let modifiedObject: typeOfTaskObject;
-    let resultArray: typeOfTaskObject[];
+  try {
+    let resultArray: typeOfTaskObject[] = [];
 
-    if (valueOfEntry && valueOfEntry.length > 0) {
-      valueOfEntry.forEach((ObjectsFromLSArrays: typeOfTaskObject) => {
-        if (ObjectsFromLSArrays.id == task.id) {
-          arrayNameToModify = localSEntry[0];
-          arrayToModify = JSON.parse(localSEntry[1]);
-          modifiedObject = ObjectsFromLSArrays;
+    const arrayFromLSToEdit = localStorage[task.state];
+
+    if (JSON.parse(arrayFromLSToEdit).length > 0) {
+      let modifiedObject: typeOfTaskObject;
+
+      JSON.parse(arrayFromLSToEdit).forEach((taskObject: typeOfTaskObject) => {
+        if (taskObject.id == task.id) {
+          modifiedObject = taskObject;
           modifiedObject.title = editableValue.title;
           modifiedObject.description = editableValue.description;
           modifiedObject.category = editableValue.category;
-
-          resultArray = arrayToModify.filter((element) => {
+          resultArray = JSON.parse(arrayFromLSToEdit).filter((element: typeOfTaskObject) => {
             return element.id != task.id;
           });
 
           resultArray.push(modifiedObject);
-
-          localStorage.setItem(arrayNameToModify, JSON.stringify(resultArray));
-          setTasks(resultArray);
+          localStorage.setItem(task.state, JSON.stringify(resultArray));
         }
       });
+    } else {
+      return Promise.reject({ reason: { id: 0, text: "This task was already deleted from the list, UI updated..." } });
     }
-  });
+
+    return Promise.resolve(resultArray);
+  } catch (error) {
+    throw error;
+  }
 };
