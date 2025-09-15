@@ -2,6 +2,7 @@ import { useState, useContext } from "react";
 import { EditModal } from "./EditModal";
 import { Context } from "../context/Context";
 import { deleteTask } from "../helpers/deleteTask";
+import CategoryBadge from "./Task/CategoryBadge";
 const NO_DATA_ERROR = 0;
 
 const Tasks = ({ setTasks, task }) => {
@@ -64,7 +65,7 @@ const Tasks = ({ setTasks, task }) => {
         <p className=" font-light text-sm">{task.description}</p>
 
         {/* category */}
-        {task.category != "none" && <p className="bg-green-50 text-green-700 text-xs font-medium me-2 px-2.5 py-1 rounded-md ring-1 ring-inset ring-green-600/20 self-start">{task.category}</p>}
+        {task.category != "none" && <CategoryBadge category={task.category} />}
       </div>
 
       {/* modal to edit (will appear on edit button click) */}
