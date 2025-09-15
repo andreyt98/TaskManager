@@ -13,7 +13,7 @@ export default function Home() {
   const [completedTasks, setCompletedTasks] = useState([]);
   const [message, setMessage] = useState({ message: null, severity: null, open: false });
   const [showTaskModal, setShowTaskModal] = useState(false);
-  const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: "", title: "", description: "", category: "" } | null });
+  const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: 0, title: "", description: "", category: "" } | null });
 
   const contextValues = {
     newTasks,

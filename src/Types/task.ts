@@ -1,7 +1,7 @@
 export interface ITask {
-  id: string;
-  state: string;
-  title: string;
-  description: string;
+  id: number;
   category: string;
+  status: "new" | "in progress" | "completed";
+  title: string;
+  description?: string;
 }
