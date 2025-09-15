@@ -1,35 +1,25 @@
-import { useState, useContext } from "react";
-import { EditModal } from "./EditModal";
+import { useContext } from "react";
 import { Context } from "../context/Context";
 import { deleteTask } from "../helpers/deleteTask";
 import CategoryBadge from "./Task/CategoryBadge";
 const NO_DATA_ERROR = 0;
 
 const Tasks = ({ setTasks, task }) => {
-  const [showEditable, setShowEditable] = useState(false);
-  const [editClicked, setEditClicked] = useState(false); //esto no lo ocupo, cuando pase setshoweditable eso lo va a hacer todo
-  const { setMessage } = useContext(Context);
+  const { setMessage, setShowTaskModal, setActiveTaskValues } = useContext(Context);
   const handleDelete = async () => {
     try {
       const deletedTask = await deleteTask(task);
-       setTasks(deletedTask);
-       setMessage({ message: "Task deleted!", severity: "warning", open: true });
+      setTasks(deletedTask);
+      setMessage({ message: "Task deleted!", severity: "warning", open: true });
     } catch (error) {
-
       if (error.reason && error.reason.id === NO_DATA_ERROR) {
         setMessage({ message: error.reason.text, severity: "warning", open: true });
         setTasks([]);
         return;
-      } 
+      }
       setMessage({ message: "Error deleting task!", severity: "error", open: true });
-      
     }
   };
-
-  function showEditableInput() {
-    setEditClicked(true);
-    setShowEditable(!showEditable);
-  }
 
   return (
     <div className={"task  border border-gray-300 flex flex-col items-center justify-space-between bg-gray-100 rounded-md text-black"}>
@@ -44,7 +34,12 @@ const Tasks = ({ setTasks, task }) => {
             </svg>
           </button>
           <div className="dropdown-menu absolute -left-8 top-6  bg-gray-50 border border-slate-300 rounded-md text-black flex flex-col justify-start gap-2 overflow-hidden">
-            <button onClick={showEditableInput}>
+            <button
+              onClick={() => {
+                setShowTaskModal(true);
+                setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category });
+              }}
+            >
               <p className=" cursor-pointer hover:bg-gray-100 px-3 py-2">Edit</p>
             </button>
 
@@ -64,12 +59,8 @@ const Tasks = ({ setTasks, task }) => {
         {/* description */}
         <p className=" font-light text-sm">{task.description}</p>
 
-        {/* category */}
         {task.category != "none" && <CategoryBadge category={task.category} />}
       </div>
-
-      {/* modal to edit (will appear on edit button click) */}
-      {showEditable && <EditModal task={task} setTasks={setTasks} setShowEditable={setShowEditable} />}
     </div>
   );
 };

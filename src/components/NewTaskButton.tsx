@@ -1,8 +1,16 @@
+import { useContext } from "react";
+import { Context } from "../context/Context";
+
 function NewTaskButton() {
+  const { setShowTaskModal, setActiveTaskValues } = useContext(Context);
+
   return (
     <button
       className="text-white flex gap-2 px-5 py-2.5 lg:text-lg rounded-3xl bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none hover:scale-105 transition-all duration-200"
-      onClick={() => {}}
+      onClick={() => {
+        setShowTaskModal(true);
+        setActiveTaskValues(null);
+      }}
     >
       {" "}
       New Task
