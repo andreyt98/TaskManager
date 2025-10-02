@@ -1,9 +1,10 @@
 import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig";
 import { Context } from "../context/Context";
+import { convertStatus } from "../repositories/localStorageRepository/localStorageRepository";
 
 function TaskForm() {
-  const { activeTaskValues } = useContext(Context);
+  const { setNewTasks, setInProgressTasks, setCompletedTasks, activeTaskValues, repo, setShowTaskModal } = useContext(Context);
 
   const isNewTask = activeTaskValues === null;
   const { title, description, category } = activeTaskValues || {};
@@ -12,8 +13,40 @@ function TaskForm() {
   return (
     <form
       className="p-4 md:p-5"
-      onSubmit={(e) => {
-        // handleSubmit(e);
+      onSubmit={async (e) => {
+        e.preventDefault();
+
+        try {
+          if (isNewTask) {
+            await repo.addTask({
+              status: isNewTask ? "new" : activeTaskValues.status,
+              title: inputValues.title,
+              category: inputValues.category,
+              description: inputValues.description,
+            });
+            setShowTaskModal(false);
+            const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
+            setNewTasks(LSTasks);
+          } else {
+            await repo.updateTask(inputValues, activeTaskValues);
+            setShowTaskModal(false);
+
+            const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
+            switch (activeTaskValues.status) {
+              case "new":
+                setNewTasks(LSTasks);
+                break;
+              case "in progress":
+                setInProgressTasks(LSTasks);
+                break;
+              case "completed":
+                setCompletedTasks(LSTasks);
+                break;
+            }
+          }
+        } catch (error) {
+          console.error("Error on task: ", e);
+        }
       }}
     >
       <div className="grid gap-6 mb-4 grid-cols-2 ">

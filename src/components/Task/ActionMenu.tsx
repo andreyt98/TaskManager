@@ -1,9 +1,9 @@
-import React, { useContext } from "react";
+import { useContext } from "react";
 import { Context } from "../../context/Context";
 import { ITask } from "../../Types/task";
-
-function ActionMenu({ task }: { task: ITask }) {
-  const { setShowTaskModal, setActiveTaskValues } = useContext(Context);
+const NO_DATA_ERROR = 0;
+function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask | []) => void }) {
+  const { setShowTaskModal, setActiveTaskValues, repo, setMessage } = useContext(Context);
 
   return (
     <div className="dropdown text-right relative text-sm">
@@ -16,15 +16,27 @@ function ActionMenu({ task }: { task: ITask }) {
         <button
           onClick={() => {
             setShowTaskModal(true);
-            setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category });
+            setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category, status: task.status });
           }}
         >
           <p className="hover:bg-gray-100 px-3 py-2">Edit</p>
         </button>
 
         <button
-          onClick={(e) => {
-            // handleDelete(e);
+          onClick={async (e) => {
+            try {
+              const taskDeleted = await repo.deleteTask(task);
+              setTasks(taskDeleted);
+              setMessage({ message: "Task deleted!", severity: "warning", open: true });
+            } catch (e: any) {
+              console.error(e);
+              if (e.reason && e.reason.id === NO_DATA_ERROR) {
+                setMessage({ message: e.reason.text, severity: "warning", open: true });
+                setTasks([]);
+                return;
+              }
+              setMessage({ message: "Error deleting task!", severity: "error", open: true });
+            }
           }}
         >
           <p className="hover:bg-gray-100 px-3 py-2">Delete</p>

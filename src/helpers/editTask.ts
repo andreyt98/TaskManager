@@ -1,30 +1,34 @@
-import { typeOfInputValues, typeOfTaskObject } from "./submitTask";
+import { ITask } from "../Types/task";
+import { typeOfInputValues } from "./submitTask";
 
-export const editTask = (editableValue: typeOfInputValues, task: typeOfTaskObject): Promise<typeOfTaskObject[]> => {
-  if (localStorage.length === 0 || !localStorage.getItem(task.state)) {
+
+
+
+export const editTask = (editableValue: typeOfInputValues, task: ITask): Promise<ITask[]> => {
+  if (localStorage.length === 0 || !localStorage.getItem(task.status)) {
     return Promise.reject({ reason: { id: 0, text: "No task in this list, UI updated..." } });
   }
 
   try {
-    let resultArray: typeOfTaskObject[] = [];
+    let resultArray: ITask[] = [];
 
-    const arrayFromLSToEdit = localStorage[task.state];
+    const arrayFromLSToEdit = localStorage[task.status];
 
     if (JSON.parse(arrayFromLSToEdit).length > 0) {
-      let modifiedObject: typeOfTaskObject;
+      let modifiedObject: ITask;
 
-      JSON.parse(arrayFromLSToEdit).forEach((taskObject: typeOfTaskObject) => {
+      JSON.parse(arrayFromLSToEdit).forEach((taskObject: ITask) => {
         if (taskObject.id == task.id) {
           modifiedObject = taskObject;
           modifiedObject.title = editableValue.title;
           modifiedObject.description = editableValue.description;
           modifiedObject.category = editableValue.category;
-          resultArray = JSON.parse(arrayFromLSToEdit).filter((element: typeOfTaskObject) => {
+          resultArray = JSON.parse(arrayFromLSToEdit).filter((element: ITask) => {
             return element.id != task.id;
           });
 
           resultArray.push(modifiedObject);
-          localStorage.setItem(task.state, JSON.stringify(resultArray));
+          localStorage.setItem(task.status, JSON.stringify(resultArray));
         }
       });
     } else {

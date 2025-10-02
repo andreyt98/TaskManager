@@ -1,85 +1,81 @@
 import { DropResult } from "react-beautiful-dnd";
-import { typeOfTaskObject } from "./submitTask";
 import { Dispatch, SetStateAction } from "react";
+import { ITask } from "../Types/task";
+import { isValidStatus, convertStatus, taskStatus } from "../repositories/localStorageRepository/localStorageRepository";
 
 export const dragEndHandler = (
   result: DropResult,
-  setNewTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setInProgressTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setCompletedTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>
+  setNewTasks: Dispatch<SetStateAction<ITask[] | []>>,
+  setInProgressTasks: Dispatch<SetStateAction<ITask[] | []>>,
+  setCompletedTasks: Dispatch<SetStateAction<ITask[] | []>>
 ) => {
   if (!result.destination) {
     return;
   }
 
   const source: string = result.source.droppableId;
-  const destination: string = result.destination.droppableId;
+  const destination: taskStatus = isValidStatus(result.destination.droppableId);
 
   const idToSearch: string = result.draggableId;
 
-  const sourceTasksFromLS: typeOfTaskObject[] = JSON.parse(localStorage.getItem(source) || "");
+  const sourceTasksFromLS: ITask[] = JSON.parse(localStorage.getItem(source) || "");
 
-  let arrayWithoutMovedElement: typeOfTaskObject[] = [];
+  let arrayWithoutMovedElement: ITask[] = [];
 
-  let elementToMove: typeOfTaskObject = {
-    id: "2",
-    state: "2",
-    title: "2",
-    description: "2",
-    category: "2",
+  let elementToMove: ITask = {
+    id: 0,
+    status: "new",
+    title: "",
+    description: "",
+    category: "",
   };
 
-  sourceTasksFromLS.forEach((element: typeOfTaskObject) => {
-    if (element.id == idToSearch) {
+  sourceTasksFromLS.forEach((element: ITask) => {
+    if (element.id.toString() == idToSearch) {
       elementToMove = element;
 
       arrayWithoutMovedElement = sourceTasksFromLS.filter((el) => {
-        return el.id != idToSearch;
+        return el.id.toString() != idToSearch;
       });
     }
   });
 
   localStorage.setItem(source, JSON.stringify(arrayWithoutMovedElement));
-  setArray(source, setNewTasks, setInProgressTasks, setCompletedTasks, arrayWithoutMovedElement);
-  elementToMove.state = destination;
+  updateUIStateArrays(source, setNewTasks, setInProgressTasks, setCompletedTasks, arrayWithoutMovedElement);
+  elementToMove.status = destination;
 
-  moveTaskToDestination( destination, elementToMove, setNewTasks, setInProgressTasks, setCompletedTasks);
+  moveTaskToDestination(convertStatus(destination), elementToMove, setNewTasks, setInProgressTasks, setCompletedTasks);
 };
 
 export const moveTaskToDestination = (
-  destination: string,
-  elementToMove: typeOfTaskObject,
-  setNewTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setInProgressTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setCompletedTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>
+  destinationName: string,
+  elementToMove: ITask,
+  setNewTasks: Dispatch<SetStateAction<ITask[]>>,
+  setInProgressTasks: Dispatch<SetStateAction<ITask[]>>,
+  setCompletedTasks: Dispatch<SetStateAction<ITask[]>>
 ) => {
   // agregamos el elemento al array destination
-  const isDestinationInLocalS: typeOfTaskObject[] = JSON.parse(localStorage.getItem(destination) || "[]");
+  const destinationArrayLS: ITask[] = JSON.parse(localStorage.getItem(destinationName) || "[]");
   //si no hay nada en el destination array en el ls
-  if (isDestinationInLocalS && isDestinationInLocalS.length > 0) {
-    //TODO: actualizar el LS cada vez que se actualizan los arrays para evitar estar seteando tanto los arrays
+  if (destinationArrayLS && destinationArrayLS.length > 0) {
+    destinationArrayLS.push(elementToMove);
+    localStorage.setItem(destinationName, JSON.stringify(destinationArrayLS));
 
-    //actualizar el localS
-    isDestinationInLocalS.push(elementToMove);
-    localStorage.setItem(destination, JSON.stringify(isDestinationInLocalS));
-
-    //actualizar array para la parte visual
-
-    setArray(destination, setNewTasks,setInProgressTasks, setCompletedTasks, isDestinationInLocalS);
+    updateUIStateArrays(destinationName, setNewTasks, setInProgressTasks, setCompletedTasks, destinationArrayLS);
   } else {
     let temp = [elementToMove];
-    localStorage.setItem(destination, JSON.stringify(temp));
+    localStorage.setItem(destinationName, JSON.stringify(temp));
 
-    setArray(destination, setNewTasks, setInProgressTasks, setCompletedTasks, temp);
+    updateUIStateArrays(destinationName, setNewTasks, setInProgressTasks, setCompletedTasks, temp);
   }
 };
 
-const setArray = (
+const updateUIStateArrays = (
   name: string,
-  setNewTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setInProgressTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  setCompletedTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>,
-  valueToSave: typeOfTaskObject[]
+  setNewTasks: Dispatch<SetStateAction<ITask[]>>,
+  setInProgressTasks: Dispatch<SetStateAction<ITask[]>>,
+  setCompletedTasks: Dispatch<SetStateAction<ITask[]>>,
+  valueToSave: ITask[]
 ) => {
   if (name == "newTasks") {
     setNewTasks(valueToSave);

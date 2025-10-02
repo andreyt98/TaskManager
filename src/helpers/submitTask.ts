@@ -1,41 +1,34 @@
+
+// CREO QUE TODA ESTA FUNCION YA NO LO OCUPO
+
 import { Dispatch, SetStateAction } from "react";
+import { ITask } from "../Types/task";
 
 export type typeOfInputValues = {
-    title: string,
-    description: string,
-    category: string
-}
+  title: string;
+  description: string;
+  category: string;
+};
 
-export type typeOfTaskObject = {
-    id: string,
-    state: string,
-    title: string,
-    description: string,
-    category: string    
-}
+export const submitTask = (inputValues: typeOfInputValues, newTasks: ITask[] = [], setNewTasks: Dispatch<SetStateAction<ITask[]>>) => {
+  if (inputValues.title == "" || inputValues.description == "") {
+    return;
+  }
 
-export const submitTask = (inputValues: typeOfInputValues, newTasks: typeOfTaskObject[] = [], setNewTasks: Dispatch<SetStateAction<typeOfTaskObject[]>>) => {    
+  const newTaskObj: ITask = {
+    id: Math.random() + Date.now(),
+    status: "new",
+    title: inputValues.title,
+    description: inputValues.description,
+    category: inputValues.category,
+  };
 
-    if(inputValues.title == "" || inputValues.description==""){
-      return;
-    }
+  let newTaskArray: ITask[];
 
-    const newTaskObj: typeOfTaskObject = {
-      id: Math.random().toString(36).substring(2) + Date.now().toString(36),
-      state: "newTasks",
-      title: inputValues.title,
-      description: inputValues.description,
-      category: inputValues.category,
-    };
-
-    let newTaskArray: typeOfTaskObject[];
-
-    if (newTasks.length < 1) {
-      newTaskArray = [newTaskObj];
-    } else {
-      newTaskArray = [...newTasks, newTaskObj];
-    }
-    setNewTasks(newTaskArray);
-    localStorage.setItem("newTasks", JSON.stringify(newTaskArray));
-
-}
+  if (newTasks.length < 1) {
+    newTaskArray = [newTaskObj];
+  } else {
+    newTaskArray = [...newTasks, newTaskObj];
+  }
+  localStorage.setItem("newTasks", JSON.stringify(newTaskArray));
+};

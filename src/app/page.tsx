@@ -7,13 +7,17 @@ import { Context } from "../context/Context";
 import { dragEndHandler } from "../helpers/dragEndHandler";
 import TaskModal from "../components/TaskModal";
 import NewTaskButton from "../components/NewTaskButton";
+import { localStorageRepository } from "../repositories/localStorageRepository/localStorageRepository";
+import { ITask } from "../Types/task";
+
 export default function Home() {
-  const [newTasks, setNewTasks] = useState([]);
-  const [inProgresstasks, setInProgressTasks] = useState([]);
-  const [completedTasks, setCompletedTasks] = useState([]);
-  const [message, setMessage] = useState({ message: null, severity: null, open: false });
+  const [newTasks, setNewTasks] = useState<ITask[]>([]);
+  const [inProgresstasks, setInProgressTasks] = useState<ITask[]>([]);
+  const [completedTasks, setCompletedTasks] = useState<ITask[]>([]);
+  const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const [showTaskModal, setShowTaskModal] = useState(false);
-  const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: 0, title: "", description: "", category: "" } | null });
+  const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: 0, title: "", description: "", category: "" } });
+  const [repo, setRepo] = useState(localStorageRepository); // set this value checking if user is signed in
 
   const contextValues = {
     newTasks,
@@ -27,12 +31,13 @@ export default function Home() {
     setShowTaskModal,
     activeTaskValues,
     setActiveTaskValues,
+    repo,
   };
 
   useEffect(() => {
-    setNewTasks(JSON.parse(localStorage.getItem("newTasks")) || []);
-    setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks")) || []);
-    setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks")) || []);
+    setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]"));
+    setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]"));
+    setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]"));
   }, []);
 
   return (
