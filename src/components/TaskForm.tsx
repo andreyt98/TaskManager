@@ -103,10 +103,7 @@ function TaskForm() {
         </div>
       </div>
 
-      <button
-        type="submit"
-        className="text-white mt-2 max-sm:w-full bg-blue-500 hover:bg-blue-600 focus:ring-4 focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-3 text-center"
-      >
+      <button type="submit" className="btn-primary mt-2 max-sm:w-full rounded-lg text-sm !px-5 !py-3">
         {isNewTask ? "Add" : "Update"}
       </button>
     </form>

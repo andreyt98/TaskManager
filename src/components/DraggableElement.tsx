@@ -11,13 +11,22 @@ interface IDraggableElement {
   taskArray: ITask[];
   setTasks: (task: ITask | []) => void;
   typeOfArrayName: taskStatusType;
+  isLoading: boolean;
 }
 
-export const DraggableElement: React.FC<IDraggableElement> = ({ provided, typeOfArrayName, taskArray, setTasks }) => {
+export function DraggableElement({ provided, typeOfArrayName, taskArray, setTasks, isLoading }: IDraggableElement) {
   return (
-    <div ref={provided.innerRef} {...provided.droppableProps} className="min-h-48 flex-1 border  rounded-lg px-4 py-8 w-full flex flex-col gap-4 shadow-lg max-h-96 overflow-auto">
+    <div ref={provided.innerRef} {...provided.droppableProps} className="min-h-48 flex-1 border rounded-lg px-4 py-8 w-full flex flex-col gap-4 shadow-lg max-h-96 overflow-auto">
       <TaskStatus status={typeOfArrayName} />
-      {taskArray &&
+
+      {isLoading ? (
+        <div className="flex flex-col rounded-md items-start justify-center p-2 gap-2 animate-pulse border h-full w-full  bg-gray-200">
+          <div className="h-3 w-full rounded-md bg-gray-400"></div>
+          <div className="h-3 w-[80%] rounded-md bg-gray-400"></div>
+          <div className="h-3 w-[65%] rounded-md bg-gray-400"></div>
+        </div>
+      ) : (
+        taskArray &&
         taskArray.length > 0 &&
         taskArray.map((task, index) => {
           return (
@@ -31,10 +40,11 @@ export const DraggableElement: React.FC<IDraggableElement> = ({ provided, typeOf
               }}
             </Draggable>
           );
-        })}
+        })
+      )}
       <span className="absolute">{provided.placeholder}</span>
     </div>
   );
-};
+}
 
 export default DraggableElement;

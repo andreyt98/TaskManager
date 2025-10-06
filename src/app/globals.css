@@ -16,42 +16,70 @@
   }
 }
 
-body {
-  color: rgb(var(--foreground-rgb));
-  background: linear-gradient(
-      to bottom,
-      transparent,
-      rgb(var(--background-end-rgb))
-    )
-    rgb(var(--background-start-rgb));
-}
-
 @layer utilities {
   .text-balance {
     text-wrap: balance;
   }
 }
 
-.dropdown>.dropdown-menu,
-  .dropdown.open>.dropdown-menu {
-     display: none;
-     transition: all ease 0.2s;
-  }
-  .dropdown:hover>.dropdown-menu,
-  .dropdown.open:hover>.dropdown-menu { 
-     display: flex;
-  }
+.dropdown > .dropdown-menu,
+.dropdown.open > .dropdown-menu {
+  display: none;
+  transition: all ease 0.2s;
+}
+.dropdown:hover > .dropdown-menu,
+.dropdown.open:hover > .dropdown-menu {
+  display: flex;
+}
 
-  * {
-    &::-webkit-scrollbar {
-      width: 7px;
-    }
-    &::-webkit-scrollbar-track {
-      background: #dedede97;
-      border-radius: 12px;
-    }
-    &::-webkit-scrollbar-thumb {
-      background: #7676767a;
-      border-radius: 12px;
-    }
+* {
+  &::-webkit-scrollbar {
+    width: 7px;
   }
+  &::-webkit-scrollbar-track {
+    background: #dedede97;
+    border-radius: 12px;
+  }
+  &::-webkit-scrollbar-thumb {
+    background: #7676767a;
+    border-radius: 12px;
+  }
+}
+.btn-primary {
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-content-primary text-white [text-shadow:none] font-semibold border border-gray-700 border-none;
+}
+.btn-secondary {
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-slate-200 hover:bg-content-secondary text-black [text-shadow:none] font-semibold border border-gray-700 border-none;
+}
+.flex-col-center {
+  @apply flex flex-col justify-center items-center;
+}
+.flex-col-start {
+  @apply flex flex-col justify-start items-center;
+}
+.flex-col-between {
+  @apply flex flex-col justify-between items-center;
+}
+.flex-row-center {
+  @apply flex justify-center items-center;
+}
+.flex-row-between {
+  @apply flex justify-between items-center;
+}
+.nav {
+  @apply flex-row-center rounded-lg py-[0.8rem] w-full px-4 bg-none text-[90%] bg-slate-100 max-lg:z-[99];
+}
+
+.landing {
+  background: #e2e8f0;
+  background: #e2e8f0;
+  background: linear-gradient(
+    180deg,
+    rgba(226, 232, 240, 1) 0%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(255, 255, 255, 1) 0%,
+    rgba(245, 245, 245, 1) 32%,
+    rgba(226, 232, 240, 1) 65%,
+    rgba(226, 232, 240, 1) 100%
+  );
+}

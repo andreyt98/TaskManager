@@ -9,6 +9,9 @@ import TaskModal from "../components/TaskModal";
 import NewTaskButton from "../components/NewTaskButton";
 import { localStorageRepository } from "../repositories/localStorageRepository/localStorageRepository";
 import { ITask } from "../Types/task";
+import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
+import Navbar from "../components/Navbar/Navbar";
+import LandingPage from "../views/LandingPage/LandingPage";
 
 export default function Home() {
   const [newTasks, setNewTasks] = useState<ITask[]>([]);
@@ -34,43 +37,49 @@ export default function Home() {
     repo,
   };
 
-  useEffect(() => {
-    setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]"));
-    setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]"));
-    setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]"));
-  }, []);
+  const queryClient = new QueryClient();
+
+  // useEffect(() => {
+  //   setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]"));
+  //   setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]"));
+  //   setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]"));
+  // }, []);
 
   return (
-    <Context.Provider value={contextValues}>
-      <main className="flex min-h-screen flex-col items-center justify-center gap-4 p-4 bg-gray-50 relative">
-        <NewTaskButton />
-        <DragDropContext
-          onDragEnd={(result) => {
-            dragEndHandler(result, setNewTasks, setInProgressTasks, setCompletedTasks);
-          }}
-        >
-          <TasksContainer />
-        </DragDropContext>
-        <Snackbar
-          open={message.open}
-          autoHideDuration={2500}
-          onClose={() => {
-            setMessage({ ...message, open: false });
-          }}
-        >
-          <Alert
+    <QueryClientProvider client={queryClient}>
+      <Context.Provider value={contextValues}>
+        <main className="flex min-h-screen flex-col items-center justify-start gap-4 p-4 bg-gray-50 relative">
+          <Navbar />
+          {/* <LandingPage /> */}
+          <NewTaskButton />
+          <DragDropContext
+            onDragEnd={(result) => {
+              dragEndHandler(result, setNewTasks, setInProgressTasks, setCompletedTasks);
+            }}
+          >
+            <TasksContainer />
+          </DragDropContext>
+          <Snackbar
+            open={message.open}
+            autoHideDuration={2500}
             onClose={() => {
               setMessage({ ...message, open: false });
             }}
-            severity={message.severity}
-            variant="filled"
-            sx={{ width: "100%" }}
           >
-            {message.message}
-          </Alert>
-        </Snackbar>
-        {showTaskModal && <TaskModal />}
-      </main>
-    </Context.Provider>
+            <Alert
+              onClose={() => {
+                setMessage({ ...message, open: false });
+              }}
+              severity={message.severity}
+              variant="filled"
+              sx={{ width: "100%" }}
+            >
+              {message.message}
+            </Alert>
+          </Snackbar>
+          {showTaskModal && <TaskModal />}
+        </main>
+      </Context.Provider>
+    </QueryClientProvider>
   );
 }

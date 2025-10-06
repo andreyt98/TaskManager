@@ -1,8 +1,13 @@
 import CategoryBadge from "./Task/CategoryBadge";
 import ActionMenu from "./Task/ActionMenu";
 import { ITask } from "../Types/task";
+import { useEffect } from "react";
 
 const Tasks = ({ setTasks, task }: { setTasks: (task: ITask | []) => void; task: ITask }) => {
+  useEffect(() => {
+    console.log(task);
+  }, [task]);
+
   return (
     <div className={"task  border border-gray-300 flex flex-col items-center justify-space-between bg-gray-100 rounded-md text-black"}>
       {/* title and dropdown */}
