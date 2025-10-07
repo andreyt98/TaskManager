@@ -1,6 +1,8 @@
 import { Poppins } from "next/font/google";
 import "./globals.css";
 import { ReactNode } from "react";
+import StoreProvider from "../store/StoreProvider";
+
 const poppins = Poppins({ weight: "400", subsets: ["latin"] });
 
 export const metadata = {
@@ -11,7 +13,9 @@ export const metadata = {
 export default function RootLayout({ children }: { children: ReactNode }) {
   return (
     <html lang="en">
-      <body className={poppins.className}>{children}</body>
+      <body className={poppins.className}>
+        <StoreProvider>{children}</StoreProvider>
+      </body>
     </html>
   );
 }

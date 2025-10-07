@@ -1,9 +1,13 @@
 import { useContext } from "react";
 import { Context } from "../../context/Context";
 import { ITask } from "../../Types/task";
+import { setShowTaskModal } from "../../store/slices/UISlice";
+import { useDispatch } from "react-redux";
+
 const NO_DATA_ERROR = 0;
-function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask | []) => void }) {
-  const { setShowTaskModal, setActiveTaskValues, repo, setMessage } = useContext(Context);
+function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[]) => void }) {
+  const { setActiveTaskValues, repo, setMessage } = useContext(Context);
+  const dispatch = useDispatch();
 
   return (
     <div className="dropdown text-right relative text-sm">
@@ -15,7 +19,7 @@ function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask | 
       <div className="dropdown-menu absolute -left-8 top-6  bg-gray-50 border border-slate-300 rounded-md text-black flex flex-col justify-start gap-2 overflow-hidden">
         <button
           onClick={() => {
-            setShowTaskModal(true);
+            dispatch(setShowTaskModal(true));
             setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category, status: task.status });
           }}
         >

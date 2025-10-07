@@ -3,7 +3,7 @@ import ActionMenu from "./Task/ActionMenu";
 import { ITask } from "../Types/task";
 import { useEffect } from "react";
 
-const Tasks = ({ setTasks, task }: { setTasks: (task: ITask | []) => void; task: ITask }) => {
+const Tasks = ({ setTasks, task }: { setTasks: (task: ITask[] | []) => void; task: ITask }) => {
   useEffect(() => {
     console.log(task);
   }, [task]);

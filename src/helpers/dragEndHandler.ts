@@ -1,14 +1,8 @@
 import { DropResult } from "react-beautiful-dnd";
-import { Dispatch, SetStateAction } from "react";
 import { ITask } from "../Types/task";
 import { isValidStatus, convertStatus, taskStatus } from "../repositories/localStorageRepository/localStorageRepository";
 
-export const dragEndHandler = (
-  result: DropResult,
-  setNewTasks: Dispatch<SetStateAction<ITask[] | []>>,
-  setInProgressTasks: Dispatch<SetStateAction<ITask[] | []>>,
-  setCompletedTasks: Dispatch<SetStateAction<ITask[] | []>>
-) => {
+export const dragEndHandler = (result: DropResult, setNewTasks: (task: ITask[]) => void, setInProgressTasks: (task: ITask[]) => void, setCompletedTasks: (task: ITask[]) => void) => {
   if (!result.destination) {
     return;
   }
@@ -50,9 +44,9 @@ export const dragEndHandler = (
 export const moveTaskToDestination = (
   destinationName: string,
   elementToMove: ITask,
-  setNewTasks: Dispatch<SetStateAction<ITask[]>>,
-  setInProgressTasks: Dispatch<SetStateAction<ITask[]>>,
-  setCompletedTasks: Dispatch<SetStateAction<ITask[]>>
+  setNewTasks: (task: ITask[]) => void,
+  setInProgressTasks: (task: ITask[]) => void,
+  setCompletedTasks: (task: ITask[]) => void
 ) => {
   // agregamos el elemento al array destination
   const destinationArrayLS: ITask[] = JSON.parse(localStorage.getItem(destinationName) || "[]");
@@ -70,13 +64,8 @@ export const moveTaskToDestination = (
   }
 };
 
-const updateUIStateArrays = (
-  name: string,
-  setNewTasks: Dispatch<SetStateAction<ITask[]>>,
-  setInProgressTasks: Dispatch<SetStateAction<ITask[]>>,
-  setCompletedTasks: Dispatch<SetStateAction<ITask[]>>,
-  valueToSave: ITask[]
-) => {
+//esto probablemente no sirva, porque los sets no tienen el dispatch de redux
+const updateUIStateArrays = (name: string, setNewTasks: (task: ITask[]) => void, setInProgressTasks: (task: ITask[]) => void, setCompletedTasks: (task: ITask[]) => void, valueToSave: ITask[]) => {
   if (name == "newTasks") {
     setNewTasks(valueToSave);
   } else if (name == "inProgressTasks") {

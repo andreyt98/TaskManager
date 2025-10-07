@@ -2,10 +2,13 @@ import { useContext } from "react";
 import Overlay from "./common/Overlay";
 import { Context } from "../context/Context";
 import TaskForm from "./TaskForm";
+import { setShowTaskModal } from "../store/slices/UISlice";
+import { useDispatch } from "react-redux";
 
 function TaskModal() {
-  const { setShowTaskModal, activeTaskValues } = useContext(Context);
+  const { activeTaskValues } = useContext(Context);
   const isNewTask = activeTaskValues === null;
+  const dispatch = useDispatch();
 
   return (
     <Overlay setShowOverlay={setShowTaskModal}>
@@ -16,7 +19,7 @@ function TaskModal() {
             title="close-overlay"
             className="text-gray-400 bg-transparent hover:bg-gray-200 hover:text-gray-900 rounded-lg text-sm w-8 h-8 ms-auto inline-flex justify-center items-center"
             onClick={() => {
-              setShowTaskModal(false);
+              dispatch(setShowTaskModal(false));
             }}
             type="button"
           >

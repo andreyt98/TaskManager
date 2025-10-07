@@ -12,26 +12,18 @@ import { ITask } from "../Types/task";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
 import Navbar from "../components/Navbar/Navbar";
 import LandingPage from "../views/LandingPage/LandingPage";
-
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../store/slices/taskSlice";
 export default function Home() {
-  const [newTasks, setNewTasks] = useState<ITask[]>([]);
-  const [inProgresstasks, setInProgressTasks] = useState<ITask[]>([]);
-  const [completedTasks, setCompletedTasks] = useState<ITask[]>([]);
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
-  const [showTaskModal, setShowTaskModal] = useState(false);
   const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: 0, title: "", description: "", category: "" } });
+
   const [repo, setRepo] = useState(localStorageRepository); // set this value checking if user is signed in
 
+  const { showTaskModal } = useSelector((state: RootState) => state.ui);
   const contextValues = {
-    newTasks,
-    setNewTasks,
-    inProgresstasks,
-    setInProgressTasks,
-    completedTasks,
-    setCompletedTasks,
     setMessage,
-    showTaskModal,
-    setShowTaskModal,
     activeTaskValues,
     setActiveTaskValues,
     repo,
@@ -39,11 +31,13 @@ export default function Home() {
 
   const queryClient = new QueryClient();
 
-  // useEffect(() => {
-  //   setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]"));
-  //   setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]"));
-  //   setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]"));
-  // }, []);
+  const dispatch = useDispatch();
+
+  useEffect(() => {
+    dispatch(setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]")));
+    dispatch(setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]")));
+    dispatch(setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]")));
+  }, [dispatch]);
 
   return (
     <QueryClientProvider client={queryClient}>

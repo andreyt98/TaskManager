@@ -1,14 +1,16 @@
 import { useContext } from "react";
 import { Context } from "../context/Context";
+import { useDispatch } from "react-redux";
+import { setShowTaskModal } from "../store/slices/UISlice";
 
 function NewTaskButton() {
-  const { setShowTaskModal, setActiveTaskValues } = useContext(Context);
-
+  const { setActiveTaskValues } = useContext(Context);
+  const dispatch = useDispatch();
   return (
     <button
       className="btn-primary flex gap-2 px-5 py-2.5 lg:text-lg rounded-lg  focus:outline-none"
       onClick={() => {
-        setShowTaskModal(true);
+        dispatch(setShowTaskModal(true));
         setActiveTaskValues(null);
       }}
     >

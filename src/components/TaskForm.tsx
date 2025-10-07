@@ -2,13 +2,18 @@ import { useContext, useState } from "react";
 import { categories } from "../helpers/taskConfig";
 import { Context } from "../context/Context";
 import { convertStatus } from "../repositories/localStorageRepository/localStorageRepository";
-
+import { setShowTaskModal } from "../store/slices/UISlice";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../store";
+import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../store/slices/taskSlice";
 function TaskForm() {
-  const { setNewTasks, setInProgressTasks, setCompletedTasks, activeTaskValues, repo, setShowTaskModal } = useContext(Context);
+  const { activeTaskValues, repo } = useContext(Context);
 
   const isNewTask = activeTaskValues === null;
   const { title, description, category } = activeTaskValues || {};
   const [inputValues, setInputValues] = useState({ title: title, description: description, category: category });
+  const dispatch = useDispatch();
+  const { newTasks, completedTasks, inProgressTasks } = useSelector((state: RootState) => state.taskSlice);
 
   return (
     <form
@@ -19,33 +24,34 @@ function TaskForm() {
         try {
           if (isNewTask) {
             await repo.addTask({
-              status: isNewTask ? "new" : activeTaskValues.status,
+              status: "new",
               title: inputValues.title,
               category: inputValues.category,
               description: inputValues.description,
             });
-            setShowTaskModal(false);
+            dispatch(setShowTaskModal(false));
             const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
-            setNewTasks(LSTasks);
+            dispatch(setNewTasks(LSTasks));
+
           } else {
             await repo.updateTask(inputValues, activeTaskValues);
-            setShowTaskModal(false);
+            dispatch(setShowTaskModal(false));
 
             const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
             switch (activeTaskValues.status) {
               case "new":
-                setNewTasks(LSTasks);
+                dispatch(setNewTasks(LSTasks));
                 break;
               case "in progress":
-                setInProgressTasks(LSTasks);
+                dispatch(setInProgressTasks(LSTasks));
                 break;
               case "completed":
-                setCompletedTasks(LSTasks);
+                dispatch(setCompletedTasks(LSTasks));
                 break;
             }
           }
         } catch (error) {
-          console.error("Error on task: ", e);
+          console.error("Error on task: ", error);
         }
       }}
     >

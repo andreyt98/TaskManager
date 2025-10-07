@@ -1,6 +1,5 @@
 "use client";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
-import { Dispatch, SetStateAction } from "react";
 import Tasks from "./Tasks";
 import { taskStatusType } from "../Types/taskStatus";
 import TaskStatus from "./Task/TaskStatus";
@@ -9,7 +8,7 @@ import { ITask } from "../Types/task";
 interface IDraggableElement {
   provided: DroppableProvided;
   taskArray: ITask[];
-  setTasks: (task: ITask | []) => void;
+  setTasks: (task: ITask[]) => void;
   typeOfArrayName: taskStatusType;
   isLoading: boolean;
 }
