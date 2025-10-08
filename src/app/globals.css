@@ -46,10 +46,10 @@
   }
 }
 .btn-primary {
-  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-content-primary text-white [text-shadow:none] font-semibold border border-gray-700 border-none;
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-brand-primary text-white [text-shadow:none] font-semibold border border-gray-700 border-none;
 }
 .btn-secondary {
-  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-slate-200 hover:bg-content-secondary text-black [text-shadow:none] font-semibold border border-gray-700 border-none;
+  @apply hover:scale-105 transition duration-200 ease-in-out rounded-lg px-4 py-2 bg-brand-light text-black [text-shadow:none] font-semibold border border-gray-700 border-none;
 }
 .flex-col-center {
   @apply flex flex-col justify-center items-center;
@@ -67,19 +67,5 @@
   @apply flex justify-between items-center;
 }
 .nav {
-  @apply flex-row-center rounded-lg py-[0.8rem] w-full px-4 bg-none text-[90%] bg-slate-100 max-lg:z-[99];
-}
-
-.landing {
-  background: #e2e8f0;
-  background: #e2e8f0;
-  background: linear-gradient(
-    180deg,
-    rgba(226, 232, 240, 1) 0%,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(255, 255, 255, 1) 0%,
-    rgba(245, 245, 245, 1) 32%,
-    rgba(226, 232, 240, 1) 65%,
-    rgba(226, 232, 240, 1) 100%
-  );
+  @apply flex-row-center rounded-lg py-[0.8rem] w-full px-4 bg-none text-[90%] bg-brand-light/10 max-lg:z-[99];
 }

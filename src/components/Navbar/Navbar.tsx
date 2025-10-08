@@ -4,8 +4,8 @@ import NavItems from "./NavItems";
 export const menuActions = [
   {
     name: "Go to App",
-    href: "/",
-    icon: <i className="bi bi-house nav-mobile-icon"></i>,
+    href: "/tasks",
+    icon: null,
     actionFunction: null,
   },
 ];

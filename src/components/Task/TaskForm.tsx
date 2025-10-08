@@ -1,19 +1,23 @@
 import { useContext, useState } from "react";
 import { categories } from "../../helpers/taskConfig";
-import { Context } from "../../context/Context";
+import { RepositoryContext } from "../../context/Context";
 import { convertStatus } from "../../repositories/localStorageRepository/localStorageRepository";
 import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
+
 function TaskForm() {
-  const { activeTaskValues, repo } = useContext(Context);
+  const { repo } = useContext(RepositoryContext);
+  const { activeTaskValues } = useSelector((state: RootState) => state.taskSlice);
 
   const isNewTask = activeTaskValues === null;
+
   const { title, description, category } = activeTaskValues || {};
+
   const [inputValues, setInputValues] = useState({ title: title, description: description, category: category });
+
   const dispatch = useDispatch();
-  const { newTasks, completedTasks, inProgressTasks } = useSelector((state: RootState) => state.taskSlice);
 
   return (
     <form

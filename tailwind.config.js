@@ -16,12 +16,12 @@ module.exports = {
       },
       colors: {
         brand:{
-          primary: "#3b82f6",
-          light: "#5688F2",
+          primary: "#3FC014",
+          light: "rgba(63, 192, 20, 0.29)",
         },
 
         content:{
-          primary:"#0d75ff",
+          primary:"#3FC014",
           secondary:"#d4d4d8",
           third:"#a3a3a3",
           muted:"#686767",

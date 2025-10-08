@@ -5,12 +5,24 @@ interface TaskState {
   newTasks: ITask[];
   inProgressTasks: ITask[];
   completedTasks: ITask[];
+  activeTaskValues: {
+    id: number;
+    title: string;
+    description: string;
+    category: string;
+  };
 }
 
 const initialState: TaskState = {
   newTasks: [],
   inProgressTasks: [],
   completedTasks: [],
+  activeTaskValues: {
+    id: 0,
+    title: "string",
+    description: "string",
+    category: "string",
+  },
 };
 
 export const taskSlice = createSlice({
@@ -26,9 +38,12 @@ export const taskSlice = createSlice({
     setCompletedTasks: (state: TaskState, action: PayloadAction<ITask[] | []>) => {
       state.completedTasks = action.payload;
     },
+    setActiveTaskValues: (state: TaskState, action) => {
+      state.activeTaskValues = action.payload;
+    },
   },
 });
 
-export const { setNewTasks, setInProgressTasks, setCompletedTasks } = taskSlice.actions;
+export const { setNewTasks, setInProgressTasks, setCompletedTasks, setActiveTaskValues } = taskSlice.actions;
 
 export default taskSlice.reducer;

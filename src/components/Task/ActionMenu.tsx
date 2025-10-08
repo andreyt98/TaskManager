@@ -1,12 +1,13 @@
 import { useContext } from "react";
-import { Context } from "../../context/Context";
 import { ITask } from "../../Types/task";
 import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch } from "react-redux";
-
+import { setActiveTaskValues } from "../../store/slices/taskSlice";
+import { RepositoryContext } from "../../context/Context";
+import { setMessage } from "../../store/slices/UISlice";
 const NO_DATA_ERROR = 0;
 function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[]) => void }) {
-  const { setActiveTaskValues, repo, setMessage } = useContext(Context);
+  const { repo } = useContext(RepositoryContext);
   const dispatch = useDispatch();
 
   return (
@@ -20,7 +21,7 @@ function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[])
         <button
           onClick={() => {
             dispatch(setShowTaskModal(true));
-            setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category, status: task.status });
+            dispatch(setActiveTaskValues({ id: task.id, title: task.title, description: task.description, category: task.category, status: task.status }));
           }}
         >
           <p className="hover:bg-gray-100 px-3 py-2">Edit</p>
@@ -31,15 +32,15 @@ function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[])
             try {
               const taskDeleted = await repo.deleteTask(task);
               setTasks(taskDeleted);
-              setMessage({ message: "Task deleted!", severity: "warning", open: true });
+              dispatch(setMessage({ message: "Task deleted!", severity: "warning", open: true }));
             } catch (e: any) {
               console.error(e);
               if (e.reason && e.reason.id === NO_DATA_ERROR) {
-                setMessage({ message: e.reason.text, severity: "warning", open: true });
+                dispatch(setMessage({ message: e.reason.text, severity: "warning", open: true }));
                 setTasks([]);
                 return;
               }
-              setMessage({ message: "Error deleting task!", severity: "error", open: true });
+              dispatch(setMessage({ message: "Error deleting task!", severity: "error", open: true }));
             }
           }}
         >

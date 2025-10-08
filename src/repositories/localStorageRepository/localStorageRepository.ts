@@ -99,7 +99,7 @@ export const localStorageRepository: ITaskRepository = {
     }
   },
 
-  async deleteTask(task: ITask): Promise<ITask[] | void> {
+  async deleteTask(task: ITask): Promise<ITask[]> {
     if (localStorage.length === 0 || !localStorage.getItem(convertStatus(task.status))) {
       return Promise.reject({ reason: { id: 0, text: "No task in this list, UI updated..." } });
     }

@@ -1,14 +1,16 @@
 function LandingPage() {
   return (
-    <div className="rounded-lg text-center text-black w-full flex-col-center gap-2 p-2 landing">
-      <h1 className="md:text-[240%] tracking-tight leading-tight text-pretty font-semibold text-xl">
-        Simplify your task management <br /> with Clarity
-      </h1>
-      <p className="">Organize, prioritize and focus - all in one workplace</p>
+    <div className="rounded-lg h-screen text-center text-black w-full flex flex-col items-center justify-start gap-4 p-2 landing">
+      <div>
+        <h1 className=" md:text-[240%] tracking-tight leading-tight text-pretty font-semibold text-xl">Simplify your task management</h1>
+        <p className="max-md:text-[85%]">
+          Organize, prioritize and focus, <br /> all in one workplace.
+        </p>
+      </div>
 
       {/* <div className="border-2 border-red-200 h-72 w-[75%] "> */}
       {/* image here */}
-      <img src="https://i.pinimg.com/736x/5e/97/aa/5e97aa3af68b934d0fdb14c1c894bbbf.jpg" alt="" />
+      <img className="lg:w-1/3" src="https://mir-s3-cdn-cf.behance.net/project_modules/fs_webp/9d4b93179374693.64f87fe05aa79.png" alt="" />
       {/* </div> */}
 
       <div className="flex-row-center gap-4">

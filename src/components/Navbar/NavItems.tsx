@@ -33,7 +33,7 @@ function NavItems() {
               return (
                 <li className="" key={index}>
                   <Link
-                    className={`${" hover:text-brand-light hover:font-semibold"} nav-item-box max-sm:text-[80%] border-b border-transparent transition-all duration-200`}
+                    className={`${" hover:font-semibold"} nav-item-box max-sm:text-[80%] border-b border-transparent transition-all duration-200`}
                     key={index}
                     href={element.href}
                   >
