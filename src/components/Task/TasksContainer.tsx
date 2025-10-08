@@ -80,19 +80,49 @@ export function TasksContainer() {
     <div className="p-2 flex flex-col justify-center lg:flex-row gap-8 lg:w-11/12 xl:w-9/12 w-full text-black">
       <Droppable droppableId="newTasks">
         {(provided) => {
-          return <DraggableElement provided={provided} typeOfArrayName={"New tasks"} taskArray={newTasks} setTasks={setNewTasks} isLoading={isLoading} />;
+          return (
+            <DraggableElement
+              provided={provided}
+              typeOfArrayName={"New tasks"}
+              taskArray={newTasks}
+              setTasks={(value: ITask[]) => {
+                dispatch(setNewTasks(value));
+              }}
+              isLoading={isLoading}
+            />
+          );
         }}
       </Droppable>
 
       <Droppable droppableId="inProgressTasks">
         {(provided) => {
-          return <DraggableElement provided={provided} typeOfArrayName={"In progress"} taskArray={inProgressTasks} setTasks={setInProgressTasks} isLoading={isLoading} />;
+          return (
+            <DraggableElement
+              provided={provided}
+              typeOfArrayName={"In progress"}
+              taskArray={inProgressTasks}
+              setTasks={(value: ITask[]) => {
+                dispatch(setInProgressTasks(value));
+              }}
+              isLoading={isLoading}
+            />
+          );
         }}
       </Droppable>
 
       <Droppable droppableId="completedTasks">
         {(provided) => {
-          return <DraggableElement provided={provided} typeOfArrayName={"Completed"} taskArray={completedTasks} setTasks={setCompletedTasks} isLoading={isLoading} />;
+          return (
+            <DraggableElement
+              provided={provided}
+              typeOfArrayName={"Completed"}
+              taskArray={completedTasks}
+              setTasks={(value: ITask[]) => {
+                dispatch(setCompletedTasks(value));
+              }}
+              isLoading={isLoading}
+            />
+          );
         }}
       </Droppable>
     </div>
