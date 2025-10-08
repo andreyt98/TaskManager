@@ -19,9 +19,11 @@ export default function Home() {
   const [message, setMessage] = useState<{ message: string; severity: "error" | "info" | "success" | "warning"; open: boolean }>({ message: "", severity: "info", open: false });
   const [activeTaskValues, setActiveTaskValues] = useState({ taskValues: { id: 0, title: "", description: "", category: "" } });
 
+  const { authState } = useSelector((state: RootState) => state.auth);
   const [repo, setRepo] = useState(localStorageRepository); // set this value checking if user is signed in
 
   const { showTaskModal } = useSelector((state: RootState) => state.ui);
+
   const contextValues = {
     setMessage,
     activeTaskValues,
@@ -34,9 +36,15 @@ export default function Home() {
   const dispatch = useDispatch();
 
   useEffect(() => {
-    dispatch(setNewTasks(JSON.parse(localStorage.getItem("newTasks") || "[]")));
-    dispatch(setInProgressTasks(JSON.parse(localStorage.getItem("inProgressTasks") || "[]")));
-    dispatch(setCompletedTasks(JSON.parse(localStorage.getItem("completedTasks") || "[]")));
+    async function getAll() {
+      const { newTasks, inProgressTasks, completedTasks } = await repo.getAllTasks();
+
+      dispatch(setNewTasks(newTasks));
+      dispatch(setInProgressTasks(inProgressTasks));
+      dispatch(setCompletedTasks(completedTasks));
+    }
+
+    getAll();
   }, [dispatch]);
 
   return (

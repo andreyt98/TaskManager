@@ -29,6 +29,13 @@ export function convertStatus(status: keyof typeof LocalSTasksNames) {
 }
 
 export const localStorageRepository: ITaskRepository = {
+  async getAllTasks() {
+    const newTasks: ITask[] = JSON.parse(localStorage.getItem("newTasks") || "[]");
+    const inProgressTasks: ITask[] = JSON.parse(localStorage.getItem("inProgressTasks") || "[]");
+    const completedTasks: ITask[] = JSON.parse(localStorage.getItem("completedTasks") || "[]");
+
+    return { newTasks, inProgressTasks, completedTasks };
+  },
   async addTask(task: ITask) {
     const { title, status, description, category } = task;
 
@@ -100,7 +107,7 @@ export const localStorageRepository: ITaskRepository = {
     try {
       let resultArray: ITask[] = [];
 
-    const arrayFromLSToDelete = localStorage[convertStatus(task.status)];
+      const arrayFromLSToDelete = localStorage[convertStatus(task.status)];
 
       if (JSON.parse(arrayFromLSToDelete).length > 0) {
         JSON.parse(arrayFromLSToDelete).forEach((taskObject: ITask) => {
