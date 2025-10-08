@@ -3,7 +3,7 @@ import "./globals.css";
 import { ReactNode } from "react";
 import StoreProvider from "../store/StoreProvider";
 
-const poppins = Poppins({ weight: "400", subsets: ["latin"] });
+const poppins = Poppins({ weight: ["300", "400", "500", "600", "700"], subsets: ["latin"] });
 
 export const metadata = {
   title: "Clarity",

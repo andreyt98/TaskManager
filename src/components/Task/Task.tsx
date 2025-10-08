@@ -1,9 +1,9 @@
-import CategoryBadge from "./Task/CategoryBadge";
-import ActionMenu from "./Task/ActionMenu";
-import { ITask } from "../Types/task";
+import CategoryBadge from "./CategoryBadge";
+import ActionMenu from "./ActionMenu";
+import { ITask } from "../../Types/task";
 import { useEffect } from "react";
 
-const Tasks = ({ setTasks, task }: { setTasks: (task: ITask[] | []) => void; task: ITask }) => {
+const Task = ({ setTasks, task }: { setTasks: (task: ITask[] | []) => void; task: ITask }) => {
   useEffect(() => {
     console.log(task);
   }, [task]);
@@ -28,4 +28,4 @@ const Tasks = ({ setTasks, task }: { setTasks: (task: ITask[] | []) => void; tas
   );
 };
 
-export default Tasks;
+export default Task;

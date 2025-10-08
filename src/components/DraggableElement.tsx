@@ -1,6 +1,6 @@
 "use client";
 import { Draggable, DroppableProvided } from "react-beautiful-dnd";
-import Tasks from "./Tasks";
+import Task from "./Task/Task";
 import { taskStatusType } from "../Types/taskStatus";
 import TaskStatus from "./Task/TaskStatus";
 import { ITask } from "../Types/task";
@@ -33,7 +33,7 @@ export function DraggableElement({ provided, typeOfArrayName, taskArray, setTask
               {(provided) => {
                 return (
                   <div ref={provided.innerRef} {...provided.dragHandleProps} {...provided.draggableProps}>
-                    <Tasks setTasks={setTasks} task={task} key={task.id} />
+                    <Task setTasks={setTasks} task={task} key={task.id} />
                   </div>
                 );
               }}

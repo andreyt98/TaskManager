@@ -1,11 +1,11 @@
 import { useContext, useState } from "react";
-import { categories } from "../helpers/taskConfig";
-import { Context } from "../context/Context";
-import { convertStatus } from "../repositories/localStorageRepository/localStorageRepository";
-import { setShowTaskModal } from "../store/slices/UISlice";
+import { categories } from "../../helpers/taskConfig";
+import { Context } from "../../context/Context";
+import { convertStatus } from "../../repositories/localStorageRepository/localStorageRepository";
+import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
-import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../store/slices/taskSlice";
+import { RootState } from "../../store";
+import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
 function TaskForm() {
   const { activeTaskValues, repo } = useContext(Context);
 
@@ -32,7 +32,6 @@ function TaskForm() {
             dispatch(setShowTaskModal(false));
             const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
             dispatch(setNewTasks(LSTasks));
-
           } else {
             await repo.updateTask(inputValues, activeTaskValues);
             dispatch(setShowTaskModal(false));

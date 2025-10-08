@@ -1,11 +1,11 @@
 "use client";
 import { Droppable } from "react-beautiful-dnd";
-import DraggableElement from "./DraggableElement";
+import DraggableElement from "../DraggableElement";
 import { useQuery } from "@tanstack/react-query";
-import { ITask } from "../Types/task";
-import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../store/slices/taskSlice";
+import { ITask } from "../../Types/task";
+import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../store";
+import { RootState } from "../../store";
 import { useState } from "react";
 export function TasksContainer() {
   const { newTasks, completedTasks, inProgressTasks } = useSelector((state: RootState) => state.taskSlice);

@@ -1,8 +1,8 @@
 import { useContext } from "react";
-import Overlay from "./common/Overlay";
-import { Context } from "../context/Context";
+import Overlay from "../common/Overlay";
+import { Context } from "../../context/Context";
 import TaskForm from "./TaskForm";
-import { setShowTaskModal } from "../store/slices/UISlice";
+import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch } from "react-redux";
 
 function TaskModal() {
@@ -11,7 +11,11 @@ function TaskModal() {
   const dispatch = useDispatch();
 
   return (
-    <Overlay setShowOverlay={setShowTaskModal}>
+    <Overlay
+      setShowOverlay={() => {
+        dispatch(setShowTaskModal(false));
+      }}
+    >
       <div className=" max-md:-translate-y-14  absolute w-11/12 lg:w-1/2 2xl:w-6/12 mx-auto rounded-lg border-gray-100 bg-gray-50 z-20 shadow-md text-black">
         <div className="flex items-center justify-between p-4 md:p-5 border-b border-b-gray-200 rounded-t ">
           <h3 className="text-lg font-semibold"> {isNewTask ? "Add a new task" : "Edit task"}</h3>

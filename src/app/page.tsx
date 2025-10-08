@@ -2,11 +2,11 @@
 import { useState, useEffect } from "react";
 import { DragDropContext } from "react-beautiful-dnd";
 import { Snackbar, Alert } from "@mui/material";
-import { TasksContainer } from "../components/TasksContainer";
+import { TasksContainer } from "../components/Task/TasksContainer";
 import { Context } from "../context/Context";
 import { dragEndHandler } from "../helpers/dragEndHandler";
-import TaskModal from "../components/TaskModal";
-import NewTaskButton from "../components/NewTaskButton";
+import TaskModal from "../components/Task/TaskModal";
+import NewTaskButton from "../components/Task/NewTaskButton";
 import { localStorageRepository } from "../repositories/localStorageRepository/localStorageRepository";
 import { ITask } from "../Types/task";
 import { QueryClient, QueryClientProvider, useQuery } from "@tanstack/react-query";
