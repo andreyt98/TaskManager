@@ -14,7 +14,7 @@ function UserMenuButton() {
   return (
     <button
       // className={`w-[2rem] h-[2rem] rounded-full font-semibold  ${userMenuActive ? "bg-brand-primary/80" : "bg-gray-800"} lg:hover:bg-brand-primary/80`}
-      className={`w-[2rem] h-[2rem] rounded-full font-semibold text-white ${"userMenuActive" == "userMenuActive" ? "bg-brand-primary/80" : "bg-gray-800"} lg:hover:bg-brand-primary/80`}
+      className={`w-[2rem] h-[2rem] rounded-full font-semibold text-white ${"userMenuActive" == "userMenuActive" ? "bg-brand-primary" : "bg-gray-800"} transition-all lg:hover:bg-brand-primary/80 lg:hover:w-[2.5rem] `}
       onClick={() => {
         // if (isMobilePWA) {
         //   dispatch(setOpenUserDrawer(true));

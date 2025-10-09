@@ -5,12 +5,7 @@ interface TaskState {
   newTasks: ITask[];
   inProgressTasks: ITask[];
   completedTasks: ITask[];
-  activeTaskValues: {
-    id: number;
-    title: string;
-    description: string;
-    category: string;
-  };
+  activeTaskValues: ITask;
 }
 
 const initialState: TaskState = {
@@ -19,9 +14,10 @@ const initialState: TaskState = {
   completedTasks: [],
   activeTaskValues: {
     id: 0,
-    title: "string",
-    description: "string",
-    category: "string",
+    status: "new",
+    title: "",
+    description: "",
+    category: "",
   },
 };
 

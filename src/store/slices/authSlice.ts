@@ -5,7 +5,7 @@ type userExists = "unknown" | "on" | "off";
 export const authSlice = createSlice({
   name: "auth",
   initialState: {
-    authState: "off",
+    authState: "on",
   },
   reducers: {
     setAuthState: (state, action: PayloadAction<userExists>) => {

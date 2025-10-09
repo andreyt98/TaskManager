@@ -1,5 +1,5 @@
 export interface typeOfInputValues {
   title: string;
-  description: string;
+  description?: string;
   category: string;
 }

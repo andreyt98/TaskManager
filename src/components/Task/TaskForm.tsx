@@ -1,4 +1,4 @@
-import { useContext, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { categories } from "../../helpers/taskConfig";
 import { RepositoryContext } from "../../context/Context";
 import { convertStatus } from "../../repositories/localStorageRepository/localStorageRepository";
@@ -6,18 +6,34 @@ import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
 import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
+import { useQuery } from "@tanstack/react-query";
+import { getTasksCategories } from "../../repositories/PostgreRepository/postgreRepository";
 
 function TaskForm() {
   const { repo } = useContext(RepositoryContext);
   const { activeTaskValues } = useSelector((state: RootState) => state.taskSlice);
+  const { authState } = useSelector((state: RootState) => state.auth);
 
   const isNewTask = activeTaskValues === null;
 
   const { title, description, category } = activeTaskValues || {};
 
   const [inputValues, setInputValues] = useState({ title: title, description: description, category: category });
+  const [tasksCategories, setTasksCategories] = useState(categories);
 
   const dispatch = useDispatch();
+
+  const { data, error, isLoading, isSuccess } = useQuery({
+    queryKey: ["tasks-categories"],
+    queryFn: () => getTasksCategories(),
+  });
+
+  useEffect(() => {
+    if (data && isSuccess) {
+      console.log(data);
+      setTasksCategories(data);
+    }
+  }, [data, error, isLoading, isSuccess]);
 
   return (
     <form
@@ -28,29 +44,34 @@ function TaskForm() {
         try {
           if (isNewTask) {
             await repo.addTask({
+              id: 0,
               status: "new",
               title: inputValues.title,
               category: inputValues.category,
               description: inputValues.description,
             });
-            dispatch(setShowTaskModal(false));
-            const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
-            dispatch(setNewTasks(LSTasks));
+            // dispatch(setShowTaskModal(false));
+            if (authState == "off") {
+              const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
+              dispatch(setNewTasks(LSTasks));
+            }
           } else {
             await repo.updateTask(inputValues, activeTaskValues);
             dispatch(setShowTaskModal(false));
 
-            const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
-            switch (activeTaskValues.status) {
-              case "new":
-                dispatch(setNewTasks(LSTasks));
-                break;
-              case "in progress":
-                dispatch(setInProgressTasks(LSTasks));
-                break;
-              case "completed":
-                dispatch(setCompletedTasks(LSTasks));
-                break;
+            if (authState == "off") {
+              const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
+              switch (activeTaskValues.status) {
+                case "new":
+                  dispatch(setNewTasks(LSTasks));
+                  break;
+                case "in progress":
+                  dispatch(setInProgressTasks(LSTasks));
+                  break;
+                case "completed":
+                  dispatch(setCompletedTasks(LSTasks));
+                  break;
+              }
             }
           }
         } catch (error) {
@@ -84,7 +105,6 @@ function TaskForm() {
               setInputValues({ ...inputValues, description: e.target.value });
             }}
             value={inputValues.description}
-            required
             id="description"
             rows={4}
             className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
@@ -101,12 +121,19 @@ function TaskForm() {
               setInputValues({ ...inputValues, category: e.target.value });
             }}
             id="category"
+            required
             value={inputValues.category}
             className=" border text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 shadow-md"
           >
-            <option disabled>Category</option>
-            {categories.map((category, index) => {
-              return <option key={index}>{category}</option>;
+            <option disabled selected>
+              Select...
+            </option>
+            {tasksCategories.map((category, index) => {
+              return (
+                <option key={category.id} defaultValue={"Select..."} data-category-id={category.id}>
+                  {category.category_name}
+                </option>
+              );
             })}
           </select>
         </div>

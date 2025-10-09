@@ -1,12 +1,11 @@
-import { useContext } from "react";
 import Overlay from "../common/Overlay";
-import { Context } from "../../context/Context";
 import TaskForm from "./TaskForm";
 import { setShowTaskModal } from "../../store/slices/UISlice";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
+import { RootState } from "../../store";
 
 function TaskModal() {
-  const { activeTaskValues } = useContext(Context);
+  const { activeTaskValues } = useSelector((state: RootState) => state.taskSlice);
   const isNewTask = activeTaskValues === null;
   const dispatch = useDispatch();
 
