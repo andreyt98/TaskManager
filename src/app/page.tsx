@@ -6,6 +6,7 @@ import App from "../components/App/App";
 import LandingPage from "../views/LandingPage/LandingPage";
 import { useSelector } from "react-redux";
 import { RootState } from "../store";
+import { ReactQueryDevtools } from "@tanstack/react-query-devtools";
 
 export default function Home() {
   const { authState } = useSelector((state: RootState) => state.auth);
@@ -36,6 +37,7 @@ export default function Home() {
           )}
         </main>
       </RepositoryContextWrapper>
+      <ReactQueryDevtools initialIsOpen={true} />
     </QueryClientProvider>
   );
 }

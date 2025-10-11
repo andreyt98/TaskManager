@@ -16,9 +16,9 @@ function TaskForm() {
 
   const isNewTask = activeTaskValues === null;
 
-  const { title, description, category } = activeTaskValues || {};
+  const { title, description, category_name } = activeTaskValues || {};
 
-  const [inputValues, setInputValues] = useState({ title: title, description: description, category: category });
+  const [inputValues, setInputValues] = useState({ title: title, description: description, category: { id: 0, category_name } });
   const [tasksCategories, setTasksCategories] = useState(categories);
 
   const dispatch = useDispatch();
@@ -30,7 +30,6 @@ function TaskForm() {
 
   useEffect(() => {
     if (data && isSuccess) {
-      console.log(data);
       setTasksCategories(data);
     }
   }, [data, error, isLoading, isSuccess]);
@@ -118,7 +117,8 @@ function TaskForm() {
           </label>
           <select
             onChange={(e) => {
-              setInputValues({ ...inputValues, category: e.target.value });
+              setInputValues({ ...inputValues, category: e.target.dataset.categoryId || "" });
+              console.log(inputValues.category);
             }}
             id="category"
             required
