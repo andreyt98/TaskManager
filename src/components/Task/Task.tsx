@@ -18,7 +18,7 @@ const Task = ({ setTasks, task }: { setTasks: (task: ITask[] | []) => void; task
         {/* description */}
         <p className=" font-light text-sm">{task.description}</p>
 
-        {task.category != "none" && <CategoryBadge category={task.category} />}
+        <CategoryBadge category={task.category.category_name} />
       </div>
     </div>
   );

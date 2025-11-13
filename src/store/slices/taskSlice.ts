@@ -14,10 +14,11 @@ const initialState: TaskState = {
   completedTasks: [],
   activeTaskValues: {
     id: 0,
-    status: "new",
+    user_id: 0,
+    status: { id: 1, status: "new" },
     title: "",
     description: "",
-    category: "",
+    category: { id: 0, category_name: "" },
   },
 };
 
