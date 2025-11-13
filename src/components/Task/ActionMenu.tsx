@@ -5,11 +5,28 @@ import { useDispatch } from "react-redux";
 import { setActiveTaskValues } from "../../store/slices/taskSlice";
 import { RepositoryContext } from "../../context/Context";
 import { setMessage } from "../../store/slices/UISlice";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 const NO_DATA_ERROR = 0;
 function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[]) => void }) {
   const { repo } = useContext(RepositoryContext);
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
+  const { mutate } = useMutation({
+    mutationFn: (id: number) => repo.deleteTask(id),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      dispatch(setMessage({ message: "Task deleted!", severity: "warning", open: true }));
+    },
+    onError(error, variables, onMutateResult, context) {
+      // if (error.reason && error.reason.id === NO_DATA_ERROR) {
+      //   dispatch(setMessage({ message: error.reason.text, severity: "warning", open: true }));
+      //   setTasks([]);
+      //   return;
+      // }
+      dispatch(setMessage({ message: "Error deleting task!", severity: "error", open: true }));
+    },
+  });
   return (
     <div className="dropdown text-right relative text-sm">
       <button title="action-menu">
@@ -29,19 +46,7 @@ function ActionMenu({ task, setTasks }: { task: ITask; setTasks: (task: ITask[])
 
         <button
           onClick={async (e) => {
-            try {
-              const taskDeleted = await repo.deleteTask(task);
-              setTasks(taskDeleted);
-              dispatch(setMessage({ message: "Task deleted!", severity: "warning", open: true }));
-            } catch (e: any) {
-              console.error(e);
-              if (e.reason && e.reason.id === NO_DATA_ERROR) {
-                dispatch(setMessage({ message: e.reason.text, severity: "warning", open: true }));
-                setTasks([]);
-                return;
-              }
-              dispatch(setMessage({ message: "Error deleting task!", severity: "error", open: true }));
-            }
+            mutate(task.id);
           }}
         >
           <p className="hover:bg-gray-100 px-3 py-2">Delete</p>

@@ -1,36 +1,16 @@
 "use client";
 import { Droppable } from "react-beautiful-dnd";
 import DraggableElement from "../DraggableElement";
-import { useQuery } from "@tanstack/react-query";
 import { ITask } from "../../Types/task";
 import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
-import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { useContext, useEffect, useState } from "react";
-import { RepositoryContext } from "../../context/Context";
+import { useDispatch } from "react-redux";
 
-export function TasksContainer() {
-  const { newTasks, completedTasks, inProgressTasks } = useSelector((state: RootState) => state.taskSlice);
-  const { repo } = useContext(RepositoryContext);
+export function TasksContainer({ error, data, isLoading }: { error: Error | null; data: { newTasks: ITask[]; inProgressTasks: ITask[]; completedTasks: ITask[] } | undefined; isLoading: boolean }) {
 
   const dispatch = useDispatch();
 
-  const { data, isLoading, error, isSuccess } = useQuery({
-    queryKey: ["tasks"],
-    queryFn: () => repo.getAllTasks(),
-  });
-
-  useEffect(() => {
-    if (data && isSuccess) {
-      dispatch(setNewTasks(data.newTasks));
-      dispatch(setInProgressTasks(data.inProgressTasks));
-      dispatch(setCompletedTasks(data.completedTasks));
-    }
-  }, [isSuccess, data]);
-
   if (error) return <p className="text-black">ERROR</p>;
 
-  // const [isLoading, setIsLoading] = useState(false);
   return (
     <div className="p-2 flex flex-col justify-center lg:flex-row gap-8 lg:w-11/12 w-full text-black">
       <Droppable droppableId="newTasks">
@@ -39,7 +19,7 @@ export function TasksContainer() {
             <DraggableElement
               provided={provided}
               typeOfArrayName={"New tasks"}
-              taskArray={newTasks}
+              taskArray={data?.newTasks}
               setTasks={(value: ITask[]) => {
                 dispatch(setNewTasks(value));
               }}
@@ -55,7 +35,7 @@ export function TasksContainer() {
             <DraggableElement
               provided={provided}
               typeOfArrayName={"In progress"}
-              taskArray={inProgressTasks}
+              taskArray={data?.inProgressTasks}
               setTasks={(value: ITask[]) => {
                 dispatch(setInProgressTasks(value));
               }}
@@ -71,7 +51,7 @@ export function TasksContainer() {
             <DraggableElement
               provided={provided}
               typeOfArrayName={"Completed"}
-              taskArray={completedTasks}
+              taskArray={data?.completedTasks}
               setTasks={(value: ITask[]) => {
                 dispatch(setCompletedTasks(value));
               }}

@@ -1,49 +1,44 @@
-import { useContext, useEffect, useState } from "react";
-import { categories } from "../../helpers/taskConfig";
+import { useContext, useState } from "react";
 import { RepositoryContext } from "../../context/Context";
-import { convertStatus } from "../../repositories/localStorageRepository/localStorageRepository";
 import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
-import { setNewTasks, setInProgressTasks, setCompletedTasks } from "../../store/slices/taskSlice";
-import { useQuery } from "@tanstack/react-query";
+import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
 import { getTasksCategories } from "../../repositories/PostgreRepository/postgreRepository";
+import { ITask } from "../../Types/task";
 
 function TaskForm() {
   const { repo } = useContext(RepositoryContext);
   const { activeTaskValues } = useSelector((state: RootState) => state.taskSlice);
-  const { authState } = useSelector((state: RootState) => state.auth);
 
   const isNewTask = activeTaskValues === null;
 
-  const { title, description, category } = activeTaskValues || {};
-
-  const [inputValues, setInputValues] = useState({
-    title: !isNewTask ? title : "",
-    description: !isNewTask ? description : "",
-    category: !isNewTask
-      ? category
-      : {
-          id: 0,
-          category_name: "Select...",
-        },
-  });
-  const [tasksCategories, setTasksCategories] = useState(categories);
+  const [inputValues, setInputValues] = useState<ITask>(
+    activeTaskValues || {
+      id: 0,
+      category: { id: 0, category_name: "Select..." },
+      status: { id: 0, status: "new" },
+      title: "",
+      description: "",
+      created_at: "",
+    }
+  );
 
   const dispatch = useDispatch();
+  const queryClient = useQueryClient();
 
-  const { data, error, isLoading, isSuccess } = useQuery({
+  const { data: taskCategories } = useQuery({
     queryKey: ["tasks-categories"],
     queryFn: () => getTasksCategories(),
   });
 
-  useEffect(() => {
-    if (data && isSuccess) {
-      setTasksCategories(data);
-      console.log(data);
-      console.log(inputValues);
-    }
-  }, [data, error, isLoading, isSuccess]);
+  const { mutate } = useMutation({
+    mutationFn: (task: ITask) => (isNewTask ? repo.addTask(task) : repo.updateTask(task)),
+    onSuccess: () => {
+      queryClient.invalidateQueries({ queryKey: ["tasks"] });
+      dispatch(setShowTaskModal(false));
+    },
+  });
 
   return (
     <form
@@ -55,44 +50,54 @@ function TaskForm() {
           select?.focus();
           return;
         }
-        console.log(inputValues);
-        try {
-          if (isNewTask) {
-            await repo.addTask({
-              id: 0, // la vamos a agregar para darle un id en el localstorage pero en el backend no se ocupa porque agrega el el automaticamente
-              user_id: 0, // si signup -> user_id del usuario autenticado, si no 0 ya que es irrelevante para usuarios no autenticados
-              status: { id: 1, status: "new" },
-              title: inputValues.title,
-              category: inputValues.category,
-              description: inputValues.description,
-            });
-            // dispatch(setShowTaskModal(false));
-            // if (authState == "off") {
-            //   const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
-            //   dispatch(setNewTasks(LSTasks));
-            // }
-          } else {
-            await repo.updateTask(inputValues, activeTaskValues);
-            dispatch(setShowTaskModal(false));
 
-            // if (authState == "off") {
-            //   const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
-            //   switch (activeTaskValues.status) {
-            //     case "new":
-            //       dispatch(setNewTasks(LSTasks));
-            //       break;
-            //     case "in progress":
-            //       dispatch(setInProgressTasks(LSTasks));
-            //       break;
-            //     case "completed":
-            //       dispatch(setCompletedTasks(LSTasks));
-            //       break;
-            //   }
-            // }
-          }
-        } catch (error) {
-          console.error("Error on task: ", error);
-        }
+        mutate(
+          isNewTask
+            ? {
+                ...inputValues,
+                id: 0, // la vamos a agregar para darle un id en el localstorage pero en el backend no se ocupa porque agrega el el automaticamente
+                status: { id: 1, status: "new" },
+              }
+            : inputValues
+        );
+
+        // try {
+        //   if (isNewTask) {
+        //     await repo.addTask({
+        //       id: 0, // la vamos a agregar para darle un id en el localstorage pero en el backend no se ocupa porque agrega el el automaticamente
+        //       user_id: 0, // si signup -> user_id del usuario autenticado, si no 0 ya que es irrelevante para usuarios no autenticados
+        //       status: { id: 1, status: "new" },
+        //       title: inputValues.title,
+        //       category: inputValues.category,
+        //       description: inputValues.description,
+        //     });
+        //     // dispatch(setShowTaskModal(false));
+        //     // if (authState == "off") {
+        //     //   const LSTasks = JSON.parse(localStorage.getItem("newTasks") || "[]");
+        //     //   dispatch(setNewTasks(LSTasks));
+        //     // }
+        //   } else {
+        //     await repo.updateTask(inputValues);
+        //     dispatch(setShowTaskModal(false));
+
+        //     // if (authState == "off") {
+        //     //   const LSTasks = JSON.parse(localStorage.getItem(convertStatus(activeTaskValues.status)) || "");
+        //     //   switch (activeTaskValues.status) {
+        //     //     case "new":
+        //     //       dispatch(setNewTasks(LSTasks));
+        //     //       break;
+        //     //     case "in progress":
+        //     //       dispatch(setInProgressTasks(LSTasks));
+        //     //       break;
+        //     //     case "completed":
+        //     //       dispatch(setCompletedTasks(LSTasks));
+        //     //       break;
+        //     //   }
+        //     // }
+        //   }
+        // } catch (error) {
+        //   console.error("Error on task: ", error);
+        // }
       }}
     >
       <div className="grid gap-6 mb-4 grid-cols-2 ">
@@ -144,13 +149,14 @@ function TaskForm() {
             <option disabled selected data-category-id={"0"}>
               Select...
             </option>
-            {tasksCategories.map((category, index) => {
-              return (
-                <option key={category.id} defaultValue={"Select..."} data-category-id={category.id}>
-                  {category.category_name}
-                </option>
-              );
-            })}
+            {taskCategories &&
+              taskCategories.map((category: { id: number; category_name: string }, index: number) => {
+                return (
+                  <option key={category.id} defaultValue={"Select..."} data-category-id={category.id}>
+                    {category.category_name}
+                  </option>
+                );
+              })}
           </select>
         </div>
       </div>

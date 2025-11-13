@@ -3,9 +3,7 @@ import { ITaskRepository } from "../types/ITaskRepository";
 
 export const postgreRepository: ITaskRepository = {
   async addTask(task) {
-    // console.log(task);
-
-    const req = await fetch("http://127.0.0.1:3001/api/tasks", {
+    const request = await fetch("http://127.0.0.1:3001/api/tasks", {
       mode: "cors",
       method: "POST",
       headers: {
@@ -14,8 +12,7 @@ export const postgreRepository: ITaskRepository = {
       body: JSON.stringify(task),
     });
 
-    const resp = await req.json();
-    console.log("response del backend desde el front es ", resp);
+    const response = await request.json();
   },
 
   async getAllTasks() {
@@ -64,8 +61,22 @@ export const postgreRepository: ITaskRepository = {
     }
     return { newTasks, inProgressTasks, completedTasks };
   },
-  async updateTask(task) {},
-  async deleteTask(task) {},
+  async updateTask(task) {
+    const request = await fetch(`http://127.0.0.1:3001/api/tasks/${task.id}`, {
+      method: "PATCH",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify(task),
+    });
+    const response = await request.json();
+  },
+
+  async deleteTask(task_Id: number) {
+    const request = await fetch(`http://127.0.0.1:3001/api/tasks/${task_Id}`, {
+      method: "DELETE",
+    });
+    const response = await request.json();
+    return response;
+  },
 };
 
 export async function getTasksCategories() {

@@ -10,10 +10,22 @@ import TaskModal from "../../components/Task/TaskModal";
 import { Alert, Snackbar } from "@mui/material";
 import { RootState } from "../../store";
 import { useDispatch, useSelector } from "react-redux";
+import { useQuery } from "@tanstack/react-query";
+import { useContext } from "react";
+import { RepositoryContext } from "../../context/Context";
 
 function App() {
   const dispatch = useDispatch();
   const { showTaskModal, message } = useSelector((state: RootState) => state.ui);
+  const { repo } = useContext(RepositoryContext);
+
+  const { data, isLoading, error } = useQuery({
+    queryKey: ["tasks"],
+    queryFn: () => repo.getAllTasks(),
+  });
+  if (isLoading) return <p className="text-black animate-bounce">Loading...</p>;
+
+  if (error) return <p className="text-black">ERROR</p>;
 
   return (
     <>
@@ -23,7 +35,7 @@ function App() {
           dragEndHandler(result, setNewTasks, setInProgressTasks, setCompletedTasks);
         }}
       >
-        <TasksContainer />
+        <TasksContainer error={error} data={data} isLoading={isLoading} />
       </DragDropContext>
 
       <Snackbar

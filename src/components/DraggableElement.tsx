@@ -7,7 +7,7 @@ import { ITask } from "../Types/task";
 
 interface IDraggableElement {
   provided: DroppableProvided;
-  taskArray: ITask[];
+  taskArray: ITask[] | undefined;
   setTasks: (task: ITask[]) => void;
   typeOfArrayName: taskStatusType;
   isLoading: boolean;
