@@ -1,9 +1,9 @@
 import { ITask } from "../../Types/task";
 import { ITaskRepository } from "../types/ITaskRepository";
-
+import { API_BASE_URL, API_ENDPOINTS } from "../../constants";
 export const postgreRepository: ITaskRepository = {
   async addTask(task) {
-    const request = await fetch("http://127.0.0.1:3001/api/tasks", {
+    const request = await fetch(`${API_BASE_URL}${API_ENDPOINTS.TASKS.ADD}`, {
       mode: "cors",
       method: "POST",
       headers: {
@@ -16,7 +16,7 @@ export const postgreRepository: ITaskRepository = {
   },
 
   async getAllTasks() {
-    const response = await fetch("http://127.0.0.1:3001/api/tasks", { mode: "cors" });
+    const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.TASKS.GET}`, { mode: "cors" });
 
     const json = await response.json();
     let data: ITask[] = [];
@@ -62,7 +62,7 @@ export const postgreRepository: ITaskRepository = {
     return { newTasks, inProgressTasks, completedTasks };
   },
   async updateTask(task) {
-    const request = await fetch(`http://127.0.0.1:3001/api/tasks/${task.id}`, {
+    const request = await fetch(`${API_BASE_URL}${API_ENDPOINTS.TASKS.UPDATE(task.id)}`, {
       method: "PATCH",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify(task),
@@ -71,7 +71,7 @@ export const postgreRepository: ITaskRepository = {
   },
 
   async deleteTask(task_Id: number) {
-    const request = await fetch(`http://127.0.0.1:3001/api/tasks/${task_Id}`, {
+    const request = await fetch(`${API_BASE_URL}${API_ENDPOINTS.TASKS.DELETE(task_Id)}`, {
       method: "DELETE",
     });
     const response = await request.json();
@@ -80,8 +80,7 @@ export const postgreRepository: ITaskRepository = {
 };
 
 export async function getTasksCategories() {
-  const response = await fetch("http://127.0.0.1:3001/api/tasks/categories", { mode: "cors" });
+  const response = await fetch(`${API_BASE_URL}${API_ENDPOINTS.TASKS.GET_CATEGORIES}`, { mode: "cors" });
   const json = await response.json();
-  if (response.ok) console.log("todo bien en las categories ", json);
   return json; // <- clave: nunca retornes undefined
 }

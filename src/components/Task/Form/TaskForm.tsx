@@ -1,11 +1,14 @@
 import { useContext, useState } from "react";
-import { RepositoryContext } from "../../context/Context";
-import { setShowTaskModal } from "../../store/slices/UISlice";
+import { RepositoryContext } from "../../../context/Context";
+import { setShowTaskModal } from "../../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
-import { RootState } from "../../store";
-import { useMutation, useQuery, useQueryClient } from "@tanstack/react-query";
-import { getTasksCategories } from "../../repositories/PostgreRepository/postgreRepository";
-import { ITask } from "../../Types/task";
+import { RootState } from "../../../store";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { ITask } from "../../../Types/task";
+import SubmitButton from "./FormElements/SubmitButton";
+import TitleField from "./FormElements/TitleField";
+import DescriptionField from "./FormElements/DescriptionField";
+import CategoryField from "./FormElements/CategoryField";
 
 function TaskForm() {
   const { repo } = useContext(RepositoryContext);
@@ -26,11 +29,6 @@ function TaskForm() {
 
   const dispatch = useDispatch();
   const queryClient = useQueryClient();
-
-  const { data: taskCategories } = useQuery({
-    queryKey: ["tasks-categories"],
-    queryFn: () => getTasksCategories(),
-  });
 
   const { mutate } = useMutation({
     mutationFn: (task: ITask) => (isNewTask ? repo.addTask(task) : repo.updateTask(task)),
@@ -101,69 +99,12 @@ function TaskForm() {
       }}
     >
       <div className="grid gap-6 mb-4 grid-cols-2 ">
-        <div className="col-span-2">
-          <label htmlFor="title" className="block mb-2 text-sm font-medium text-gray-900 ">
-            Title
-          </label>
-          <input
-            onChange={(e) => {
-              setInputValues({ ...inputValues, title: e.target.value });
-            }}
-            value={inputValues.title}
-            required
-            id="title"
-            className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
-            placeholder="add a title..."
-          ></input>
-        </div>
-
-        <div className="col-span-2">
-          <label htmlFor="description" className="block mb-2 text-sm font-medium text-gray-900 ">
-            Description
-          </label>
-          <textarea
-            onChange={(e) => {
-              setInputValues({ ...inputValues, description: e.target.value });
-            }}
-            value={inputValues.description}
-            id="description"
-            rows={4}
-            className="block p-2.5 w-full text-sm   rounded-lg border  focus:ring-blue-500 focus:border-blue-500  shadow-md resize-none"
-            placeholder="add a description..."
-          ></textarea>
-        </div>
-
-        <div className="col-span-2 sm:col-span-1">
-          <label htmlFor="category" className="block mb-2 text-sm font-medium text-gray-900">
-            Category
-          </label>
-          <select
-            onChange={(e) => {
-              setInputValues({ ...inputValues, category: { id: Number(e.target.options[e.target.selectedIndex].getAttribute("data-category-id")), category_name: e.target.value } });
-            }}
-            id="category"
-            required
-            value={inputValues.category.category_name}
-            className=" border text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 shadow-md"
-          >
-            <option disabled selected data-category-id={"0"}>
-              Select...
-            </option>
-            {taskCategories &&
-              taskCategories.map((category: { id: number; category_name: string }, index: number) => {
-                return (
-                  <option key={category.id} defaultValue={"Select..."} data-category-id={category.id}>
-                    {category.category_name}
-                  </option>
-                );
-              })}
-          </select>
-        </div>
+        <TitleField inputValues={inputValues} setInputValues={setInputValues} />
+        <DescriptionField inputValues={inputValues} setInputValues={setInputValues} />
+        <CategoryField inputValues={inputValues} setInputValues={setInputValues} />
       </div>
 
-      <button type="submit" className="btn-primary mt-2 max-sm:w-full rounded-lg text-sm !px-5 !py-3">
-        {isNewTask ? "Add" : "Update"}
-      </button>
+      <SubmitButton />
     </form>
   );
 }

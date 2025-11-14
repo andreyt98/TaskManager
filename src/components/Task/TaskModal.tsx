@@ -1,5 +1,5 @@
 import Overlay from "../common/Overlay";
-import TaskForm from "./TaskForm";
+import TaskForm from "./Form/TaskForm";
 import { setShowTaskModal } from "../../store/slices/UISlice";
 import { useDispatch, useSelector } from "react-redux";
 import { RootState } from "../../store";
